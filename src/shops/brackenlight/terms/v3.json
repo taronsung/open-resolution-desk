@@ -1,0 +1,95 @@
+{
+  "protocol": "ord-terms/1",
+  "merchant": {
+    "id": "brackenlight",
+    "name": "Brackenlight Home"
+  },
+  "version": "3",
+  "effective_from": "2026-10-15",
+  "currency": "USD",
+  "title": "Returns and refunds, version 3",
+  "clauses": {
+    "1.1": "These terms apply to orders placed while this version is in force. Your order confirmation names the version and its fingerprint.",
+    "2.1": "Changed your mind? Return unused items in their original packaging within 30 days of delivery. We refund the item price to your original payment method.",
+    "2.2": "Return shipping for change-of-mind returns costs $8.00, which we take from your refund.",
+    "2.3": "Delivery charges are not refunded for change-of-mind returns.",
+    "3.1": "If an item arrives damaged, tell us within 7 days of delivery and send a photo. We refund the item and the delivery charge or send a replacement, and we pay return shipping.",
+    "3.2": "If we send the wrong item, tell us within 30 days of delivery. We refund the item and the delivery charge or send the right item, and we pay return shipping.",
+    "3.3": "If an item stops working within 365 days of delivery, we repair it, replace it or refund it. We pay return shipping.",
+    "3.4": "If your order has not arrived 14 days after dispatch, we refund the item and the delivery charge or send it again.",
+    "4.1": "Personalised items (engraved or made to your measurements) cannot be returned because you changed your mind. Faults are still covered by clause 3.3.",
+    "5.1": "If you disagree with how we applied these terms, you can take the case to the Open Resolution Desk procedure (ord/1). We follow its computed outcome for these terms. These terms do not limit any rights you have under the law."
+  },
+  "rules": {
+    "change_of_mind": {
+      "allowed": true,
+      "window_days": 30,
+      "requires": [
+        "unused",
+        "original_packaging"
+      ],
+      "refund": [
+        "item"
+      ],
+      "return_shipping": "customer",
+      "clause": "2.1",
+      "shipping_clause": "2.2",
+      "return_label_cents": 800
+    },
+    "arrived_damaged": {
+      "allowed": true,
+      "report_within_days": 7,
+      "requires_evidence": [
+        "photo"
+      ],
+      "refund": [
+        "item",
+        "delivery"
+      ],
+      "return_shipping": "merchant",
+      "remedy": "refund_or_replacement",
+      "clause": "3.1"
+    },
+    "wrong_item": {
+      "allowed": true,
+      "report_within_days": 30,
+      "refund": [
+        "item",
+        "delivery"
+      ],
+      "return_shipping": "merchant",
+      "remedy": "refund_or_replacement",
+      "clause": "3.2"
+    },
+    "faulty": {
+      "allowed": true,
+      "report_within_days": 365,
+      "refund": [
+        "item"
+      ],
+      "return_shipping": "merchant",
+      "remedy": "repair_replacement_or_refund",
+      "clause": "3.3"
+    },
+    "not_received": {
+      "allowed": true,
+      "after_days": 14,
+      "refund": [
+        "item",
+        "delivery"
+      ],
+      "remedy": "refund_or_reshipment",
+      "clause": "3.4"
+    },
+    "exclusions": [
+      {
+        "tag": "personalised",
+        "label": "personalised items",
+        "claim_types": [
+          "change_of_mind"
+        ],
+        "clause": "4.1"
+      }
+    ]
+  }
+}

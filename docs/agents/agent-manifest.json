@@ -1,0 +1,66 @@
+{
+  "brand": "Open Resolution Desk (public procedure guide)",
+  "networks": [
+    {
+      "name": "desk_preview",
+      "front_man": "procedure_guide",
+      "hocon": "./desk_preview.network.json",
+      "description": "Explains the Open Resolution Desk procedure (ord/1) to other sites' assistants: which terms version governs a disputed return and how the case continues. Other agentic websites call it by URL.",
+      "tags": [
+        "dispute-resolution",
+        "ord/1",
+        "public-network"
+      ],
+      "sample_queries": [
+        "A receipt pins terms version 2, but the shop now uses version 3. Which applies?",
+        "How does a customer open a case at the desk?",
+        "Can the desk decide who is telling the truth about the item's condition?"
+      ]
+    }
+  ],
+  "llm_router": {
+    "base_url": "https://api.openai.com/v1",
+    "mock": false,
+    "byok_router": "https://api.openai.com/v1"
+  },
+  "allowed_peers": [],
+  "peer_policy": {
+    "mode": "closed",
+    "deny_origins": [],
+    "note": "This network calls no other site."
+  },
+  "agent_mcp": {
+    "protocol": "nsdeploy-agent-mcp/v1",
+    "network": "desk_preview",
+    "front_man": "procedure_guide",
+    "available": false,
+    "reason": "This is a static site; a public MCP facade requires an application host."
+  },
+  "linking": {
+    "protocol": "nsdeploy-link/v1",
+    "exports": [
+      {
+        "network": "desk_preview",
+        "front_man": "procedure_guide",
+        "aliases": [
+          "desk_preview",
+          "procedure_guide",
+          "open_resolution_desk"
+        ],
+        "url": "desk_preview"
+      }
+    ],
+    "imports": [],
+    "link_updates": {
+      "mode": "browser-local"
+    }
+  },
+  "deployment": {
+    "mode": "static",
+    "self_contained_runtime": false,
+    "browser_mock": false,
+    "direct_byok": true,
+    "direct_mcp_requires_cors": true,
+    "public_mcp_facade": false
+  }
+}

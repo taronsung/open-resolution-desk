@@ -1,0 +1,12 @@
+Open Resolution Desk
+Copyright 2026 the Open Resolution Desk authors
+
+This product includes software from the agentic-web repository
+(https://github.com/cognizant-ai-labs/agentic-web), licensed under the
+Apache License 2.0: the browser runtime in vendor/agentic-web/runtime (itself a
+copy of the nsdeploy runtime by Cognizant AI Lab) and
+vendor/agentic-web/scripts/build_network.mjs. They are used unchanged.
+
+The Atkinson Hyperlegible Next and Atkinson Hyperlegible Mono fonts in
+src/common/fonts are licensed under the SIL Open Font License 1.1. Their
+license texts are in that folder.

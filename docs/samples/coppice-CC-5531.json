@@ -1,0 +1,47 @@
+{
+  "protocol": "ord-handoff/1",
+  "receipt": {
+    "protocol": "ord-receipt/1",
+    "merchant": {
+      "id": "coppice",
+      "name": "Coppice Cycles",
+      "site": "https://ord-demo-shops.github.io/coppice"
+    },
+    "order_id": "CC-5531",
+    "customer": {
+      "name": "Jonah Reyes",
+      "email": "jonah.reyes@example.com"
+    },
+    "placed_on": "2026-10-30",
+    "dispatched_on": "2026-11-04",
+    "delivered_on": "2026-11-06",
+    "items": [
+      {
+        "sku": "wheelset-custom",
+        "name": "Hand-built 700c Wheelset",
+        "unit_price_cents": 42000,
+        "quantity": 1,
+        "tags": [
+          "custom"
+        ]
+      }
+    ],
+    "delivery_charge_cents": 1200,
+    "currency": "USD",
+    "terms": {
+      "version": "1",
+      "url": "https://ord-demo-shops.github.io/coppice/terms/v1.json",
+      "sha256": "sha256:69f6f7a83da034d7fa348c848c216b901399c8636f6cf4c0548ba600857b3e2e"
+    }
+  },
+  "story": "I ordered a custom wheelset and changed my mind before riding it. It is unused and in the box. I would like a refund.",
+  "shop_decision": "Not eligible: \"The item is not excluded (made-to-order items)\" is not met, clause 4.1 (our returns terms, version 1)",
+  "claim": {
+    "type": "change_of_mind",
+    "sku": "wheelset-custom",
+    "facts": {
+      "unused": true,
+      "original_packaging": true
+    }
+  }
+}

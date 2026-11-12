@@ -1,0 +1,39 @@
+/* Coppice Cycles: workshop steel and chain-ring yellow. */
+:root {
+  --font-head: "Avenir Next Condensed", "Roboto Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --head-weight: 700;
+  --head-tracking: 0.01em;
+  --bg: #ECEFEF;
+  --card: #FFFFFF;
+  --ink: #182226;
+  --muted: #4F5D63;
+  --line: #D3D9DB;
+  --line-strong: #98A4A8;
+  --link: #0E5C6B;
+  --focus: #D99A00;
+  --brand: #23353D;
+  --brand-ink: #F2F5F5;
+  --accent: #F2C230;
+  --accent-ink: #182226;
+  --accent-strong: #0E5C6B;
+  --accent-strong-ink: #FFFFFF;
+  --hero-bg: linear-gradient(135deg, #23353D 0%, #2E4650 60%, #23353D 100%);
+  --hero-ink: #F4F7F7;
+  --hero-muted: #C9D4D6;
+  --art-bg: #E4E9EA;
+  --tag-bg: #FFF1C2;
+  --tag-ink: #5C4500;
+  --hover: #F2F4F4;
+  --msg-bg: #EEF2F3;
+  --hash-bg: #E7ECED;
+  --strip-bg: #182226;
+  --strip-ink: #DCE4E5;
+  --ok: #23704A;
+  --warn: #8A5A00;
+  --error: #A33B2A;
+  --fp-ink: #0E5C6B;
+  --radius: 4px;
+  --radius-btn: 4px;
+}

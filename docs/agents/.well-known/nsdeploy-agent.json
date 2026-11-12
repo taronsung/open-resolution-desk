@@ -1,0 +1,7 @@
+{
+  "protocol": "nsdeploy-agent-mcp/v1",
+  "network": "desk_preview",
+  "front_man": "procedure_guide",
+  "available": false,
+  "reason": "This is a static site; a public MCP facade requires an application host."
+}

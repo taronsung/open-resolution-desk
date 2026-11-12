@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Case page, {{SHOP_NAME}}</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="./img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./css/shop.css">
+  <link rel="stylesheet" href="./css/theme.css">
+  <script type="module" src="./js/backoffice-main.js"></script>
+</head>
+<body class="backoffice">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-top">
+  <p class="demo-strip">Fictional demo shop. This is the shop's side of a case: anyone can open it, because the case travels in the link.</p>
+    <div class="shop-header">
+      <a class="brand" href="./">{{BRAND_MARK}}<span>{{SHOP_NAME}}</span></a>
+      <nav aria-label="Main"><a href="./">Shop</a><a href="./terms.html">Returns terms</a></nav>
+      </div>
+  </header>
+  <main id="main" class="narrow" >
+    <div id="bo-root">
+      <h1>Case page</h1>
+      <p>Open a case link from the Open Resolution Desk. This page checks it against our own records and our own copy of the published decision function before we confirm anything.</p>
+      <section id="bo-case" aria-live="polite"></section>
+      <section class="band" aria-labelledby="ledger-title">
+        <h2 id="ledger-title">Settled in this browser</h2>
+        <ul id="bo-ledger" class="ledger"></ul>
+      </section>
+    </div>
+  </main>
+  <footer class="shop-footer"><p>{{SHOP_NAME}} is fictional. Case links follow the ord/1 procedure of the <a href="{{DESK_URL}}/">Open Resolution Desk</a>.</p></footer>
+</body>
+</html>

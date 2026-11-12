@@ -1,0 +1,38 @@
+/* Brackenlight Home: dusk indigo and lamp glow. */
+:root {
+  --font-head: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --font-body: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --head-weight: 600;
+  --bg: #F1F1F4;
+  --card: #FFFFFF;
+  --ink: #1D2230;
+  --muted: #555B6B;
+  --line: #DCDCE3;
+  --line-strong: #A9ACBA;
+  --link: #2A3F7A;
+  --focus: #C98A1B;
+  --brand: #1E2A47;
+  --brand-ink: #F6EEDC;
+  --accent: #F0B94B;
+  --accent-ink: #1E2A47;
+  --accent-strong: #2A3F7A;
+  --accent-strong-ink: #FFFFFF;
+  --hero-bg: radial-gradient(ellipse at 78% 40%, #3A4466 0%, #1E2A47 55%, #161F36 100%);
+  --hero-ink: #FBF6EA;
+  --hero-muted: #D9D3C4;
+  --art-bg: #ECEAF2;
+  --tag-bg: #F4E7C8;
+  --tag-ink: #5A3E05;
+  --hover: #F4F2EC;
+  --msg-bg: #F1F1F6;
+  --hash-bg: #ECEDF3;
+  --strip-bg: #161F36;
+  --strip-ink: #E9E2D0;
+  --ok: #26704C;
+  --warn: #8A5A00;
+  --error: #A33B2A;
+  --fp-ink: #2A3F7A;
+  --radius: 10px;
+  --radius-btn: 999px;
+}

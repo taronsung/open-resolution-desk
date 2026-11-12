@@ -1,0 +1,96 @@
+{
+  "protocol": "ord-terms/1",
+  "merchant": {
+    "id": "coppice",
+    "name": "Coppice Cycles"
+  },
+  "version": "1",
+  "effective_from": "2026-01-15",
+  "currency": "USD",
+  "title": "Returns, refunds and workshop warranty, version 1",
+  "clauses": {
+    "1.1": "These terms apply to orders placed while this version is in force. Your order confirmation names the version and its fingerprint.",
+    "2.1": "Changed your mind? Return unused parts in their original packaging within 30 days of delivery. We refund the item price, less the restocking fee in clause 2.3.",
+    "2.2": "You arrange and pay for return shipping on change-of-mind returns.",
+    "2.3": "A restocking fee of 10% of the item price applies to change-of-mind returns.",
+    "3.1": "If a part arrives damaged, tell us within 14 days of delivery and send a photo. We refund the item and the delivery charge or send a replacement, and we pay return shipping.",
+    "3.2": "If we send the wrong part, tell us within 30 days of delivery. We refund the item and the delivery charge or send the right part, and we pay return shipping.",
+    "3.3": "Workshop warranty: if a wheel build or part fails within 730 days of delivery under normal use, we repair it, replace it or refund it. We pay return shipping.",
+    "3.4": "If your order has not arrived 10 days after dispatch, we refund the item and the delivery charge or send it again.",
+    "4.1": "Custom wheel builds and parts cut to your measurements are made to order. They cannot be returned because you changed your mind. Faults are covered by clause 3.3.",
+    "5.1": "If you disagree with how we applied these terms, you can take the case to the Open Resolution Desk procedure (ord/1). We follow its computed outcome for these terms. These terms do not limit any rights you have under the law."
+  },
+  "rules": {
+    "change_of_mind": {
+      "allowed": true,
+      "window_days": 30,
+      "requires": [
+        "unused",
+        "original_packaging"
+      ],
+      "refund": [
+        "item"
+      ],
+      "return_shipping": "customer",
+      "restocking_fee_percent": 10,
+      "fee_clause": "2.3",
+      "clause": "2.1",
+      "shipping_clause": "2.2"
+    },
+    "arrived_damaged": {
+      "allowed": true,
+      "report_within_days": 14,
+      "requires_evidence": [
+        "photo"
+      ],
+      "refund": [
+        "item",
+        "delivery"
+      ],
+      "return_shipping": "merchant",
+      "remedy": "refund_or_replacement",
+      "clause": "3.1"
+    },
+    "wrong_item": {
+      "allowed": true,
+      "report_within_days": 30,
+      "refund": [
+        "item",
+        "delivery"
+      ],
+      "return_shipping": "merchant",
+      "remedy": "refund_or_replacement",
+      "clause": "3.2"
+    },
+    "faulty": {
+      "allowed": true,
+      "report_within_days": 730,
+      "refund": [
+        "item"
+      ],
+      "return_shipping": "merchant",
+      "remedy": "repair_replacement_or_refund",
+      "clause": "3.3"
+    },
+    "not_received": {
+      "allowed": true,
+      "after_days": 10,
+      "refund": [
+        "item",
+        "delivery"
+      ],
+      "remedy": "refund_or_reshipment",
+      "clause": "3.4"
+    },
+    "exclusions": [
+      {
+        "tag": "custom",
+        "label": "made-to-order items",
+        "claim_types": [
+          "change_of_mind"
+        ],
+        "clause": "4.1"
+      }
+    ]
+  }
+}

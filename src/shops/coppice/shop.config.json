@@ -1,0 +1,50 @@
+{
+  "id": "coppice",
+  "name": "Coppice Cycles",
+  "prefix": "CC",
+  "tagline": "Wheel builds and parts from a two-person workshop.",
+  "about": "a small online workshop for bicycle wheel builds and parts",
+  "network": "coppice_assistant",
+  "front_man": "shop_assistant",
+  "claims_network": "coppice_claims",
+  "delivery_charge_cents": 1200,
+  "terms_current": "1",
+  "terms_versions": {
+    "1": { "path": "terms/v1.json" }
+  },
+  "catalog": [
+    { "sku": "wheelset-custom", "name": "Hand-built 700c Wheelset", "price_cents": 42000, "blurb": "Built to order on your choice of hubs and rims, 28 spokes, tensioned and trued by hand.", "image": "wheelset-custom.svg", "tags": ["custom"] },
+    { "sku": "tyre-32", "name": "32 mm Road Tyre", "price_cents": 5500, "blurb": "Supple casing, tubeless ready, reflective sidewall.", "image": "tyre-32.svg", "tags": [] },
+    { "sku": "cables-cut", "name": "Brake Cable Kit, cut to length", "price_cents": 2400, "blurb": "Stainless inner wires and housing, cut to your frame measurements.", "image": "cables-cut.svg", "tags": ["custom"] },
+    { "sku": "chain-11", "name": "11-speed Chain", "price_cents": 3800, "blurb": "Nickel-plated, 116 links, with a quick link.", "image": "chain-11.svg", "tags": [] },
+    { "sku": "saddle-leather", "name": "Leather Saddle", "price_cents": 9600, "blurb": "Vegetable-tanned leather on steel rails. Breaks in over a few weeks.", "image": "saddle-leather.svg", "tags": [] }
+  ],
+  "orders": [
+    {
+      "order_id": "CC-5531",
+      "customer": { "name": "Jonah Reyes", "email": "jonah.reyes@example.com" },
+      "placed_on": "2026-10-30",
+      "dispatched_on": "2026-11-04",
+      "delivered_on": "2026-11-06",
+      "items": [ { "sku": "wheelset-custom", "name": "Hand-built 700c Wheelset", "unit_price_cents": 42000, "quantity": 1, "tags": ["custom"] } ],
+      "delivery_charge_cents": 1200,
+      "terms_version": "1"
+    }
+  ],
+  "sample_order_ids": ["CC-5531"],
+  "offers": [
+    {
+      "id": "workshop-credit-40",
+      "kind": "store_credit_fixed",
+      "label": "Workshop credit of $40",
+      "value_cents": 4000,
+      "applies_to": ["not_eligible"],
+      "detail": "A goodwill credit toward a service or parts, valid for 12 months. Offered when a return is not eligible."
+    }
+  ],
+  "mandate": "Made-to-order wheel builds and cut-to-length parts are not returnable for change of mind (clause 4.1). When the computed outcome is not eligible for that reason, you may offer our published goodwill option once: offer id workshop-credit-40, a $40 workshop credit valid for 12 months. If the customer reports a fault, explain that the workshop warranty (clause 3.3) covers it and that they can file a faulty claim instead.",
+  "service_info": "Warranty repairs take about ten working days from arrival. We pay return shipping for faults. Workshop credit is issued the same day as confirmation.",
+  "greeting": "Hi. I can help with our wheel builds and parts, find your order, check a return, and, if you disagree with a returns decision, take the case to the Open Resolution Desk.",
+  "cannot_do": ["phone support", "discount codes", "fitting appointments", "real payments or shipping (this is a fictional demo shop)"],
+  "theme": { "primary": "#23353D" }
+}

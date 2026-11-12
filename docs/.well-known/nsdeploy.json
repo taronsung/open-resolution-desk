@@ -1,0 +1,18 @@
+{
+  "protocol": "nsdeploy-link/v1",
+  "exports": [
+    {
+      "network": "desk_clerk",
+      "front_man": "case_assistant",
+      "aliases": [
+        "desk_clerk",
+        "case_assistant"
+      ],
+      "url": "desk_clerk"
+    }
+  ],
+  "imports": [],
+  "link_updates": {
+    "mode": "browser-local"
+  }
+}

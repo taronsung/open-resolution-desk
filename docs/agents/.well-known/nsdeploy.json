@@ -1,0 +1,19 @@
+{
+  "protocol": "nsdeploy-link/v1",
+  "exports": [
+    {
+      "network": "desk_preview",
+      "front_man": "procedure_guide",
+      "aliases": [
+        "desk_preview",
+        "procedure_guide",
+        "open_resolution_desk"
+      ],
+      "url": "desk_preview"
+    }
+  ],
+  "imports": [],
+  "link_updates": {
+    "mode": "browser-local"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "brand": "Open Resolution Desk",
+  "networks": [
+    {
+      "name": "desk_clerk",
+      "front_man": "case_assistant",
+      "hocon": "./desk_clerk.network.json",
+      "description": "Settle a disagreement about an online order under the terms the shop published on the day you bought, with outcomes anyone can recompute.",
+      "tags": ["dispute-resolution", "post-sale", "ord/1", "fictional-demo"],
+      "sample_queries": "{{SAMPLE_QUERIES}}"
+    }
+  ],
+  "llm_router": {
+    "base_url": "https://api.openai.com/v1",
+    "mock": false,
+    "byok_router": "https://api.openai.com/v1"
+  },
+  "allowed_peers": [],
+  "peer_policy": {
+    "mode": "closed",
+    "deny_origins": [],
+    "note": "Shop representative networks are linked at run time from the shop's own manifest, and each contact asks the visitor first."
+  },
+  "agent_mcp": {
+    "protocol": "nsdeploy-agent-mcp/v1",
+    "network": "desk_clerk",
+    "front_man": "case_assistant",
+    "available": false,
+    "reason": "This is a static site; a public MCP facade requires an application host."
+  },
+  "theme": {
+    "primary": "#3442A0"
+  },
+  "linking": {
+    "protocol": "nsdeploy-link/v1",
+    "exports": [
+      {
+        "network": "desk_clerk",
+        "front_man": "case_assistant",
+        "aliases": ["desk_clerk", "case_assistant"],
+        "url": "desk_clerk"
+      }
+    ],
+    "imports": [],
+    "link_updates": {
+      "mode": "browser-local"
+    }
+  },
+  "deployment": {
+    "mode": "static",
+    "self_contained_runtime": true,
+    "browser_mock": false,
+    "direct_byok": true,
+    "direct_mcp_requires_cors": true,
+    "public_mcp_facade": false
+  },
+  "actions": {
+    "version": 1,
+    "module": "./site-actions.js",
+    "agentTools": ["get_case", "check_terms", "file_claim", "accept_option", "request_review"]
+  },
+  "resolution_desk": {
+    "protocol": "ord/1",
+    "engine": {
+      "name": "ord-evaluate",
+      "version": "1.0.0",
+      "url": "./protocol/v1/evaluate.js",
+      "sha256": "{{ENGINE_SHA256}}"
+    },
+    "case_page": "./case.html",
+    "verify_page": "./verify.html",
+    "public_network": "{{DESK_URL}}/agents/desk_preview",
+    "spec": "./protocol.html"
+  }
+}

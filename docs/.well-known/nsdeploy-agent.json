@@ -1,0 +1,7 @@
+{
+  "protocol": "nsdeploy-agent-mcp/v1",
+  "network": "desk_clerk",
+  "front_man": "case_assistant",
+  "available": false,
+  "reason": "This is a static site; a public MCP facade requires an application host."
+}

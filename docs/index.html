@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open Resolution Desk</title>
+  <meta name="description" content="An open agentic website for settling post-sale disputes under the terms a shop published on the day of purchase. Outcomes anyone can recompute. Runs in your browser.">
+  <link rel="icon" href="./img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="./fonts/atkinson-next.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./css/desk.css">
+  <script type="module" src="./js/landing.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-top">
+    <div class="site-header">
+    <a class="wordmark" href="./"><img src="./img/mark.svg" alt="" width="34" height="34">Open Resolution Desk</a>
+    <nav aria-label="Main">
+      <a href="./case.html">Case workspace</a>
+      <a href="./verify.html">Verify a case file</a>
+      <a href="./protocol.html">For shops and agents</a>
+    </nav>
+    </div>
+    <p class="demo-strip">A demo for the Open Agentic Web Challenge. The shops are fictional. This is not legal advice and not a court, a public body or a dispute resolution entity.</p>
+  </header>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <h1 id="hero-title">Settle it under the terms you agreed to.</h1>
+        <p class="lede">When a customer and an online shop disagree about a return, or their agents do, the desk applies the returns terms the shop published on the day of purchase. Published rules compute the outcome, and both sides can recompute it to the same fingerprint. The desk runs in your browser and never receives your case.</p>
+        <div class="row">
+          <a class="btn primary" href="./case.html#sample=brackenlight-BL-2207">Open the sample case</a>
+          <a class="btn" href="#how">How it works</a>
+        </div>
+      </div>
+      <div class="copies" role="group" aria-labelledby="copies-caption">
+        <div class="copy customer">
+          <h2>Customer's copy</h2>
+          <span class="who">Computed in the customer's browser</span>
+          <div data-fp="sha256:153a7bc661a7c28a729324017340373e7f3a9606198a07f5951681aecb7e4341"></div>
+          <code class="hash" data-fp-text="sha256:153a7bc661a7c28a729324017340373e7f3a9606198a07f5951681aecb7e4341"></code>
+        </div>
+        <div class="equals" aria-hidden="true">=<span>same</span></div>
+        <div class="copy shop">
+          <h2>Shop's copy</h2>
+          <span class="who">Recomputed on the shop's own site</span>
+          <div data-fp="sha256:153a7bc661a7c28a729324017340373e7f3a9606198a07f5951681aecb7e4341" data-matched="true"></div>
+          <code class="hash" data-fp-text="sha256:153a7bc661a7c28a729324017340373e7f3a9606198a07f5951681aecb7e4341"></code>
+        </div>
+        <p class="copies-caption" id="copies-caption">The sample case, filed Fri 13 Nov 2026. Same terms, receipt, claim and decision function give the same fingerprint wherever they run.</p>
+      </div>
+    </section>
+
+    <section class="section" id="how" aria-labelledby="how-title">
+      <h2 id="how-title">How a case runs</h2>
+      <ol class="steps-list">
+        <li><h3>The receipt pins the terms</h3><p>At checkout the shop's receipt names its returns terms by version and SHA-256 fingerprint.</p></li>
+        <li><h3>The desk reads them from the shop</h3><p>With your OK, the desk fetches that version from the shop's own site and checks the fingerprint. Nothing about you is sent.</p></li>
+        <li><h3>Published rules decide</h3><p>A short published decision function computes the outcome from the terms, the receipt and your claim. Your assistant explains it and cannot change it.</p></li>
+        <li><h3>The shop's agent has its say</h3><p>The shop publishes its own agent and its offers. The desk loads that agent by URL and runs it in your browser, with your model.</p></li>
+        <li><h3>Both sides confirm</h3><p>You choose an option. The shop opens the case link on its own site, recomputes the fingerprint and confirms.</p></li>
+      </ol>
+    </section>
+
+    <section class="section" aria-labelledby="why-title">
+      <h2 id="why-title">Why either side can check it</h2>
+      <div class="points">
+        <div><h3>Terms from the day you bought</h3><p>A later change to a shop's terms does not move the goalposts on an older order. The fingerprint on the receipt names the exact text that applies.</p></div>
+        <div><h3>Same inputs, same fingerprint</h3><p>The decision function is plain JavaScript with no clock, no network and no randomness. Anyone can run it on a case file and compare the result.</p></div>
+        <div><h3>The desk never receives your case</h3><p>This site is static. The case lives in your browser and in the links you and the shop send each other. Agents run in your browser with the model and key you choose.</p></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="limits-title">
+      <h2 id="limits-title">Where the automation stops</h2>
+      <ul class="not-list">
+        <li>The desk applies a shop's own published terms. It does not say what the law requires, gives no legal advice, and leaves any rights you have under the law untouched.</li>
+        <li>It is not a court, a public body or a dispute resolution entity. The two shops in this demo are fictional.</li>
+        <li>Every automated step is shown before it runs, and either side can ask for review by a person. In this demo no reviewer is on duty.</li>
+        <li>Facts the shop disputes, such as whether an item was used, go to a person. Rules cannot settle who is telling the truth.</li>
+      </ul>
+    </section>
+
+    <section class="section" aria-labelledby="context-title">
+      <h2 id="context-title">Why build this now</h2>
+      <p>The European Union stopped taking complaints on its central online dispute resolution platform on 20 March 2025 and closed it on 20 July 2025. The European Parliament's summary of the repeal says its performance did not justify its public and private costs (<a href="https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2023/0375(COD)">procedure 2023/0375(COD)</a>). The revised rules for consumer dispute bodies ask that automated means be disclosed in advance and that parties can request review by a natural person (<a href="https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2023/0376(COD)">procedure 2023/0376(COD)</a>, recital 21).</p>
+      <p>As agents start to shop and to handle returns for people and for shops, more of these disagreements will happen between agents. This demo shows a procedure that a small shop can adopt by publishing two files, that both sides can verify, and that holds no case data.</p>
+    </section>
+
+    <section class="section" aria-labelledby="adopt-title">
+      <h2 id="adopt-title">For shops and agents</h2>
+      <p>A shop adopts the procedure by publishing its returns terms as versioned JSON, printing the version and fingerprint on each receipt, and adding a <code>resolution</code> block to its agent manifest. It can also publish a representative agent with its offers. <a href="./protocol.html">Read the protocol</a>.</p>
+      <dl class="endpoint">
+        <dt>Public procedure guide</dt><dd><code>https://taronsung.github.io/open-resolution-desk/agents/desk_preview</code>. Any agentic website can load it by URL.</dd>
+        <dt>Case assistant network</dt><dd><a href="./desk_clerk.network.json"><code>desk_clerk.network.json</code></a>, run on this site with its website actions.</dd>
+        <dt>Decision function</dt><dd><a href="./protocol/v1/evaluate.js"><code>protocol/v1/evaluate.js</code></a>, <code class="hash" title="sha256:279e235cda3341bae997df9820fac0f71530d63bd903303c7edf700174541791" data-fp-text="sha256:279e235cda3341bae997df9820fac0f71530d63bd903303c7edf700174541791"></code></dd>
+        <dt>Demo shops</dt><dd><a href="https://ord-demo-shops.github.io/brackenlight/">Brackenlight Home</a> and <a href="https://ord-demo-shops.github.io/coppice/">Coppice Cycles</a>, both fictional.</dd>
+      </dl>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <p>Open Resolution Desk is an open-source demo for the Open Agentic Web Challenge. It follows the Worldwide Agentic Web MVP specification: a published agent network, a browser runtime, your own model key, and agent networks that load each other by URL.</p>
+    <ul class="footer-links">
+      <li><a href="./agent-manifest.json">Agent manifest</a></li>
+      <li><a href="./agents/agent-manifest.json">Public network manifest</a></li>
+      <li><a href="./protocol.html">Protocol</a></li>
+    </ul>
+  </footer>
+</body>
+</html>

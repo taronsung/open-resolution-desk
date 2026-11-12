@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Case workspace, Open Resolution Desk</title>
+  <meta name="description" content="Open a case, check the shop's pinned terms, compute the outcome with published rules, and record an agreement both sides can verify.">
+  <link rel="icon" href="./img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="./fonts/atkinson-next.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./css/desk.css">
+  <script type="module" src="./site.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-top">
+    <div class="site-header">
+    <a class="wordmark" href="./"><img src="./img/mark.svg" alt="" width="34" height="34">Open Resolution Desk</a>
+    <nav aria-label="Main">
+      <a href="./case.html" aria-current="page">Case workspace</a>
+      <a href="./verify.html">Verify a case file</a>
+      <a href="./protocol.html">For shops and agents</a>
+    </nav>
+    </div>
+    <p class="demo-strip">A demo for the Open Agentic Web Challenge. The shops are fictional. This is not legal advice and not a court, a public body or a dispute resolution entity.</p>
+  </header>
+  <main id="main">
+    <div class="case-layout">
+      <section class="case-sheet" id="case-root" aria-labelledby="case-title">
+        <header class="case-head">
+          <h1 id="case-title">Open a case</h1>
+          <p id="case-meta"></p>
+          <button type="button" class="btn quiet" data-action="new-case">New case</button>
+        </header>
+        <p id="case-flash" role="alert" hidden></p>
+
+        <div id="case-empty" class="open-options">
+          <div>
+            <h2>Try the sample case</h2>
+            <p>A customer of the fictional Brackenlight Home wants to return a lamp. The shop's assistant applied today's terms. The receipt pins older ones.</p>
+            <div class="row">
+              <button type="button" class="btn primary" data-action="sample" data-sample="brackenlight-BL-2207">Open the sample case</button>
+              <button type="button" class="btn quiet" data-action="sample" data-sample="coppice-CC-5531">Open a second sample</button>
+            </div>
+          </div>
+          <div>
+            <h2>Paste a link from a shop</h2>
+            <form id="link-form" class="inline-form">
+              <label class="visually-hidden" for="link-input">Handoff or case link</label>
+              <input id="link-input" type="url" placeholder="https://…/case.html#handoff=…" autocomplete="off">
+              <button type="submit" class="btn">Open the link</button>
+            </form>
+          </div>
+          <div>
+            <h2>Use a saved receipt</h2>
+            <p class="small">An ord/1 receipt file that a shop gave you at checkout.</p>
+            <label for="receipt-file">Receipt file (.json)</label>
+            <input id="receipt-file" type="file" accept="application/json,.json">
+          </div>
+        </div>
+
+        <ol class="steps" id="case-steps" hidden>
+          <li class="step" id="step-terms" data-state="todo">
+            <h2>Receipt and terms</h2>
+            <div id="terms-body"></div>
+          </li>
+          <li class="step" id="step-claim" data-state="todo">
+            <h2>Your claim</h2>
+            <div id="claim-body"></div>
+          </li>
+          <li class="step" id="step-outcome" data-state="todo">
+            <h2>Outcome</h2>
+            <div id="outcome-body"></div>
+          </li>
+          <li class="step" id="step-shop" data-state="todo">
+            <h2>The shop's side</h2>
+            <div id="shop-body"></div>
+          </li>
+          <li class="step" id="step-agreement" data-state="todo">
+            <h2>Agreement</h2>
+            <div id="agreement-body"></div>
+          </li>
+        </ol>
+
+      </section>
+
+      <section class="assistant" id="assistant" aria-labelledby="assistant-heading">
+        <h2 id="assistant-heading">Case assistant</h2>
+        <p>It runs in your browser with your own model provider and key. It explains and files, and it never decides the outcome.</p>
+        <p id="assistant-status" class="small" role="status">Connecting the assistant…</p>
+        <div id="agent-app">
+          <div data-ns-slot="header"></div>
+          <div data-ns-slot="chat"></div>
+          <div data-ns-slot="settings"></div>
+          <div data-ns-slot="agents"></div>
+        </div>
+          <section class="across" aria-labelledby="across-title">
+            <h2 id="across-title">Across sites</h2>
+            <p class="small muted">Every contact with another site in this visit. The desk's own host receives nothing: this page is static, and the case lives in your browser and in the links you share.</p>
+            <ol id="contact-log"></ol>
+          </section>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <p>Open Resolution Desk is an open demo of a post-sale dispute procedure for the open agentic web. Automated steps are listed on this page before they run, and you can ask for review by a person at any point. You keep any rights you have under the law.</p>
+    <ul class="footer-links">
+      <li><a href="./agent-manifest.json">Agent manifest</a></li>
+      <li><a href="./desk_clerk.network.json">Case assistant network</a></li>
+      <li><a href="./agents/agent-manifest.json">Public procedure guide network</a></li>
+      <li><a href="./protocol/v1/evaluate.js">Decision function source</a></li>
+    </ul>
+  </footer>
+</body>
+</html>

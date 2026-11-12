@@ -1,0 +1,19 @@
+{
+  "dev": {
+    "desk": "http://127.0.0.1:8090/open-resolution-desk",
+    "shops_root": "http://127.0.0.1:8091",
+    "shops": {
+      "brackenlight": "http://127.0.0.1:8091/brackenlight",
+      "coppice": "http://127.0.0.1:8091/coppice"
+    }
+  },
+  "prod": {
+    "desk": "https://taronsung.github.io/open-resolution-desk",
+    "shops_root": "https://ord-demo-shops.github.io",
+    "shops": {
+      "brackenlight": "https://ord-demo-shops.github.io/brackenlight",
+      "coppice": "https://ord-demo-shops.github.io/coppice"
+    },
+    "shops_repo_dir": "../ord-demo-shops.github.io"
+  }
+}

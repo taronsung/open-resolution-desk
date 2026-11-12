@@ -1,0 +1,24 @@
+{
+  "name": "open-resolution-desk",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An open agentic website for settling post-sale disputes under the terms a shop published on the day of purchase.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build_sites.mjs dev",
+    "build:prod": "node tools/build_sites.mjs prod",
+    "publish:prod": "node tools/build_sites.mjs prod --publish",
+    "dev": "sh tools/dev.sh",
+    "test": "node --test tests/protocol/",
+    "test:e2e": "node tests/e2e/run.mjs",
+    "audit:a11y": "node tools/a11y_audit.mjs"
+  },
+  "devDependencies": {
+    "axe-core": "4.10.2",
+    "playwright": "1.58.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "brackenlight",
+  "name": "Brackenlight Home",
+  "prefix": "BL",
+  "tagline": "Lamps and ceramics, glazed and wired in small batches.",
+  "about": "a small online shop for lamps and ceramics",
+  "network": "brackenlight_assistant",
+  "front_man": "shop_assistant",
+  "claims_network": "brackenlight_claims",
+  "delivery_charge_cents": 650,
+  "terms_current": "3",
+  "terms_versions": {
+    "2": { "path": "terms/v2.json" },
+    "3": { "path": "terms/v3.json" }
+  },
+  "catalog": [
+    { "sku": "lamp-ash-glaze", "name": "Ash Glaze Table Lamp", "price_cents": 7900, "blurb": "Stoneware base in a grey ash glaze, linen shade, 1.8 m fabric cable.", "image": "lamp-ash-glaze.svg", "tags": [] },
+    { "sku": "pendant-moss", "name": "Moss Ceramic Pendant", "price_cents": 12400, "blurb": "Wide ceramic pendant with a matte moss glaze inside and out.", "image": "pendant-moss.svg", "tags": [] },
+    { "sku": "shade-linen-l", "name": "Linen Drum Shade, large", "price_cents": 3800, "blurb": "Natural linen, 40 cm across, fits the standard E27 ring.", "image": "shade-linen-l.svg", "tags": [] },
+    { "sku": "mugs-speckle-2", "name": "Speckled Mugs, set of two", "price_cents": 3200, "blurb": "Iron-speckled stoneware, 350 ml, dishwasher safe.", "image": "mugs-speckle-2.svg", "tags": [] },
+    { "sku": "vase-night", "name": "Night Glaze Vase", "price_cents": 4600, "blurb": "A tall bottle vase in deep blue with a pooled glaze at the foot.", "image": "vase-night.svg", "tags": [] },
+    { "sku": "candle-brass-engraved", "name": "Engraved Brass Candle Holder", "price_cents": 5400, "blurb": "Solid brass, engraved with up to 20 letters of your choice.", "image": "candle-brass-engraved.svg", "tags": ["personalised"] }
+  ],
+  "orders": [
+    {
+      "order_id": "BL-2207",
+      "customer": { "name": "Mina Park", "email": "mina.park@example.com" },
+      "placed_on": "2026-09-21",
+      "dispatched_on": "2026-09-22",
+      "delivered_on": "2026-09-25",
+      "items": [ { "sku": "lamp-ash-glaze", "name": "Ash Glaze Table Lamp", "unit_price_cents": 7900, "quantity": 1, "tags": [] } ],
+      "delivery_charge_cents": 650,
+      "terms_version": "2"
+    },
+    {
+      "order_id": "BL-2318",
+      "customer": { "name": "Mina Park", "email": "mina.park@example.com" },
+      "placed_on": "2026-11-02",
+      "dispatched_on": "2026-11-03",
+      "delivered_on": "2026-11-05",
+      "items": [ { "sku": "mugs-speckle-2", "name": "Speckled Mugs, set of two", "unit_price_cents": 3200, "quantity": 1, "tags": [] } ],
+      "delivery_charge_cents": 650,
+      "terms_version": "3"
+    }
+  ],
+  "sample_order_ids": ["BL-2207", "BL-2318"],
+  "offers": [
+    {
+      "id": "credit-115",
+      "kind": "store_credit",
+      "label": "Store credit worth 115% of the refund",
+      "percent_of_refund": 115,
+      "applies_to": ["eligible"],
+      "claim_types": ["change_of_mind"],
+      "detail": "Keep shopping with us instead of a refund. Valid for 12 months."
+    }
+  ],
+  "mandate": "When the computed outcome is eligible for a change-of-mind refund, you may mention our published alternative once: offer id credit-115, store credit worth 115% of the refund, valid for 12 months. The desk computes its value from our published data. Do not press. When the outcome is not eligible, we have no alternative to offer, so say so kindly.",
+  "service_info": "After an agreement we email a prepaid return label within one business day. Refunds go to the original payment method within five business days of the item reaching us. Store credit is issued the same day as confirmation.",
+  "greeting": "Hello. I can help with our lamps and ceramics, find your order, check a return, and, if you disagree with a returns decision, take the case to the Open Resolution Desk.",
+  "cannot_do": ["phone support", "discount codes", "live delivery tracking", "real payments or shipping (this is a fictional demo shop)"],
+  "theme": { "primary": "#1E2A47" }
+}

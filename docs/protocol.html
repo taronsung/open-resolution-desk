@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The ord/1 protocol, Open Resolution Desk</title>
+  <meta name="description" content="How a shop adopts the Open Resolution Desk procedure, the file formats, the outcome fingerprint, and how the site uses the open agentic web specification.">
+  <link rel="icon" href="./img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./css/desk.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-top">
+    <div class="site-header">
+    <a class="wordmark" href="./"><img src="./img/mark.svg" alt="" width="34" height="34">Open Resolution Desk</a>
+    <nav aria-label="Main">
+      <a href="./case.html">Case workspace</a>
+      <a href="./verify.html">Verify a case file</a>
+      <a href="./protocol.html" aria-current="page">For shops and agents</a>
+    </nav>
+    </div>
+    <p class="demo-strip">A demo for the Open Agentic Web Challenge. The shops are fictional. This is not legal advice.</p>
+  </header>
+  <main id="main" class="narrow doc">
+    <h1>The ord/1 protocol</h1>
+    <p>ord/1 is a small set of public files and one decision function. A shop that publishes the files lets any customer, agent or helper settle a returns dispute under the terms that applied on the day of purchase, without a platform in the middle and without a server.</p>
+
+    <h2 id="adopt">Adopt it as a shop</h2>
+    <ol>
+      <li>Publish your returns terms as a versioned <code>ord-terms/1</code> JSON file. Keep every old version at a stable address.</li>
+      <li>Print the version and its fingerprint on every receipt (<code>ord-receipt/1</code>). The fingerprint is the SHA-256 of the file's canonical JSON.</li>
+      <li>Add a <code>resolution</code> block to your <code>agent-manifest.json</code> that lists the versions, your offers and this desk.</li>
+      <li>Optional: publish a representative agent network under a separate path such as <code>/agents/</code>, so other sites can load it by URL. Its instructions are your public mandate.</li>
+      <li>Optional: host a case page that recomputes the outcome with your own copy of the decision function before you confirm. The demo shops include one.</li>
+    </ol>
+    <pre tabindex="0" aria-label="Example">"resolution": {
+  "protocol": "ord/1",
+  "desk": "https://taronsung.github.io/open-resolution-desk",
+  "engine": { "name": "ord-evaluate", "version": "1.0.0", "sha256": "sha256:279e235cda3341bae997df9820fac0f71530d63bd903303c7edf700174541791" },
+  "terms": {
+    "current": "3",
+    "versions": {
+      "2": { "url": "./terms/v2.json", "sha256": "sha256:…", "effective_from": "2026-03-01", "effective_until": "2026-10-14" },
+      "3": { "url": "./terms/v3.json", "sha256": "sha256:…", "effective_from": "2026-10-15" }
+    }
+  },
+  "offers": [ { "id": "credit-115", "kind": "store_credit", "percent_of_refund": 115, "applies_to": ["eligible"] } ],
+  "representative": "https://shop.example/agents/shop_claims",
+  "case_page": "./backoffice.html"
+}</pre>
+    <p>See a full example in <a href="https://ord-demo-shops.github.io/brackenlight/agent-manifest.json">Brackenlight Home's manifest</a> and its <a href="https://ord-demo-shops.github.io/brackenlight/terms.html">terms archive</a>.</p>
+
+    <h2 id="terms">Terms documents</h2>
+    <table>
+      <thead><tr><th scope="col">Field</th><th scope="col">Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>version</code>, <code>effective_from</code>, <code>effective_until</code></td><td>Which orders the version covers.</td></tr>
+        <tr><td><code>clauses</code></td><td>The human text, by clause number. Outcomes cite these numbers.</td></tr>
+        <tr><td><code>rules.change_of_mind</code></td><td><code>window_days</code>, <code>requires</code> (<code>unused</code>, <code>original_packaging</code>), <code>refund</code> parts, <code>return_shipping</code>, <code>return_label_cents</code>, <code>restocking_fee_percent</code>.</td></tr>
+        <tr><td><code>rules.arrived_damaged</code>, <code>wrong_item</code>, <code>faulty</code></td><td><code>report_within_days</code>, <code>requires_evidence</code>, <code>refund</code> parts, <code>remedy</code>, <code>return_shipping</code>.</td></tr>
+        <tr><td><code>rules.not_received</code></td><td><code>after_days</code> from dispatch.</td></tr>
+        <tr><td><code>rules.exclusions</code></td><td>Item tags excluded from claim types, such as personalised or made-to-order items.</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="outcome">The outcome and its fingerprint</h2>
+    <p>The decision function <a href="./protocol/v1/evaluate.js"><code>evaluate.js</code></a> takes the pinned terms, the receipt and the claim. It reads no clock, no network and no storage. It returns a decision (<code>eligible</code>, <code>not_eligible</code>, <code>needs_review</code> or <code>incomplete</code>), the remedy, the refund value in cents, who pays return shipping, and every check with its clause.</p>
+    <p>The fingerprint is the SHA-256 of the canonical JSON of the engine (name, version and source hash), the terms hash, the receipt hash, the claim and the outcome. Canonical JSON sorts object keys and allows integers only. Two parties with the same inputs get the same fingerprint.</p>
+    <p>Language models never set the outcome or its amounts. They help a person describe what happened, explain the result, and talk to the other side's agent. Shop offers are published data, so the desk computes their value too.</p>
+
+    <h2 id="case">Case files and links</h2>
+    <p>A case file (<code>ord-case/1</code>) holds the receipt and a list of events: <code>filed</code>, <code>outcome</code>, <code>accepted</code>, <code>confirmed</code>, <code>declined</code> and <code>review_requested</code>. Each event's hash covers the one before it, so a changed or removed step is visible on the <a href="./verify.html">verify page</a>.</p>
+    <p>Cases travel as links. The shop's handoff link (<code>case.html#handoff=…</code>) and the case links between the parties (<code>#case=…</code>) carry the compressed JSON in the URL fragment, which browsers do not send to web servers. The desk's host receives nothing.</p>
+
+    <h2 id="spec">How this site uses the open agentic web specification</h2>
+    <table>
+      <thead><tr><th scope="col">Specification</th><th scope="col">Here</th></tr></thead>
+      <tbody>
+        <tr><td>Data-only networks and a manifest (sections 2 and 3.3)</td><td><a href="./agent-manifest.json">agent-manifest.json</a>, <a href="./desk_clerk.network.json">desk_clerk.network.json</a>, <a href="./agents/agent-manifest.json">agents/agent-manifest.json</a>. Built from HOCON with the runtime's own parser and validator.</td></tr>
+        <tr><td>Browser execution and site actions (3.1)</td><td>Five <code>website_*</code> actions: <code>get_case</code> and <code>check_terms</code> read, <code>file_claim</code> writes, <code>accept_option</code> and <code>request_review</code> are irreversible and confirmed by the page, not the model.</td></tr>
+        <tr><td>Loading a peer site (3.2)</td><td>The shop's representative is a link slot bound at run time from the shop's own manifest. Shops load the desk's public guide by URL. Each contact with another origin asks first, the network name must match exactly, and the peer runs in your browser.</td></tr>
+        <tr><td>Pluggable inference and BYOK (4)</td><td>Your key goes only to the model provider you choose. Peers inherit that provider and never see the key. The Across sites log shows every contact.</td></tr>
+        <tr><td>Private context (5)</td><td>Only <code>case_ref</code> may pass to the shop's representative (<code>allow.to_downstream.sly_data</code>). The customer's contact details stay on the page.</td></tr>
+        <tr><td>Fail closed (5)</td><td>A terms file that does not match the receipt's hash stops evaluation. Unknown offers are refused. A declined contact stops that step and says so.</td></tr>
+        <tr><td>Extensions (7)</td><td>Post-sale arbitration that follows the transactions-and-arbitration extension, and integrity pinning of terms and of the decision function.</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="limits">Limits of this demo</h2>
+    <ul>
+      <li>Steps are hashed, not signed. A case file shows that nothing changed after a step was recorded, but not who recorded it. A production version would sign events with keys each party publishes in its manifest.</li>
+      <li>Facts are recorded as stated. When the shop disputes one, the case goes to a person.</li>
+      <li>The decision function runs as a site action on the desk and as a pinned module on the shop. The runtime's coded-tool sandbox needs a response header that static hosts such as GitHub Pages cannot set.</li>
+      <li>Everything is tab-scoped. There are no accounts, notifications or reminders: links are the transport.</li>
+    </ul>
+  </main>
+  <footer class="site-footer"><p>Open Resolution Desk, an open-source demo for the Open Agentic Web Challenge.</p></footer>
+</body>
+</html>

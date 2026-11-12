@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{SHOP_NAME}}</title>
+  <meta name="description" content="{{TAGLINE}} A fictional demo shop for the Open Agentic Web Challenge.">
+  <link rel="icon" href="./img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./css/shop.css">
+  <link rel="stylesheet" href="./css/theme.css">
+  <script type="module" src="./site.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-top">
+  <p class="demo-strip">Fictional demo shop for the Open Agentic Web Challenge. No real products, payments or deliveries.</p>
+    <div class="shop-header">
+      <a class="brand" href="./">{{BRAND_MARK}}<span>{{SHOP_NAME}}</span></a>
+      <nav aria-label="Main">
+        <a href="#collection">Shop</a>
+        <a href="#orders">Your orders</a>
+        <a href="./terms.html">Returns terms</a>
+        <a href="#assistant">Ask us</a>
+        <a class="basket-link" href="#basket">Basket <span class="count" data-cart-count>0</span></a>
+      </nav>
+      </div>
+  </header>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h1 id="hero-title">{{TAGLINE}}</h1>
+        <p>{{HERO_LINE}}</p>
+      </div>
+      <div class="hero-art" aria-hidden="true">{{HERO_ART}}</div>
+    </div>
+  </section>
+  <main id="main">
+
+    <section id="collection" class="band" aria-labelledby="collection-title">
+      <h2 id="collection-title">{{COLLECTION_TITLE}}</h2>
+      <ul class="products" id="products"></ul>
+    </section>
+
+    <div class="two-col">
+      <section id="basket" class="band" aria-labelledby="basket-title">
+        <h2 id="basket-title">Basket</h2>
+        <div id="cart-body"></div>
+        <form id="checkout-form" class="stack" novalidate hidden>
+          <div class="field"><label for="co-name">Name</label><input id="co-name" name="name" autocomplete="name" maxlength="80" required></div>
+          <div class="field"><label for="co-email">Email</label><input id="co-email" name="email" type="email" autocomplete="email" maxlength="120" required></div>
+          <p class="form-error" role="alert"></p>
+          <button class="btn primary" type="submit">Place demo order</button>
+          <p class="small muted">No payment is taken. The receipt pins today's returns terms by version and fingerprint.</p>
+        </form>
+        <p id="checkout-result" class="small" role="status"></p>
+      </section>
+
+      <section id="orders" class="band" aria-labelledby="orders-title">
+        <h2 id="orders-title">Your orders</h2>
+        <form id="lookup-form" class="stack" novalidate>
+          <div class="field"><label for="lk-order">Order number</label><input id="lk-order" name="order_id" placeholder="{{PREFIX}}-0000" maxlength="12" autocomplete="off" required></div>
+          <div class="field"><label for="lk-email">Email on the order</label><input id="lk-email" name="email" type="email" maxlength="120" autocomplete="email" required></div>
+          <p class="form-error" role="alert"></p>
+          <button class="btn" type="submit">Find my order</button>
+        </form>
+        <p class="small">Sample order: <button type="button" class="linklike" data-fill-sample data-order="{{SAMPLE_ORDER}}" data-email="{{SAMPLE_EMAIL}}">{{SAMPLE_ORDER}}, {{SAMPLE_EMAIL}}</button></p>
+        <div id="order-body"></div>
+      </section>
+    </div>
+
+    <section id="assistant" class="band assistant" aria-labelledby="assistant-heading">
+      <h2 id="assistant-heading">Ask {{SHOP_NAME}}</h2>
+      <p>Our assistant answers about products, finds your order and checks returns. It runs in your browser with the model provider you choose below. We pay for no model calls and see none of your messages.</p>
+      <p id="assistant-status" class="small" role="status">Connecting the assistant… If this stays, the assistant could not load. The page still works.</p>
+      <div id="agent-app">
+        <div data-ns-slot="header"></div>
+        <div class="assistant-panels">
+          <div data-ns-slot="chat"></div>
+          <div data-ns-slot="agents"></div>
+        </div>
+        <div data-ns-slot="settings"></div>
+      </div>
+    </section>
+  </main>
+  <footer class="shop-footer">
+    <p>{{SHOP_NAME}} is fictional. Returns follow our <a href="./terms.html">published terms</a>. Disputes go to the <a href="{{DESK_URL}}/">Open Resolution Desk</a> (clause 5.1).</p>
+    <ul class="footer-links small">
+      <li><a href="./backoffice.html">Shop staff: case page</a></li>
+      <li><a href="./agent-manifest.json">Agent manifest</a></li>
+      <li><a href="./agents/agent-manifest.json">Public representative network</a></li>
+    </ul>
+  </footer>
+</body>
+</html>

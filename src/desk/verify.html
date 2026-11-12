@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verify a case file, Open Resolution Desk</title>
+  <meta name="description" content="Check an ord/1 case file: the event chain, the pinned terms and the recomputed outcome fingerprint.">
+  <link rel="icon" href="./img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./css/desk.css">
+  <script type="module" src="./js/verify-page.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-top">
+    <div class="site-header">
+    <a class="wordmark" href="./"><img src="./img/mark.svg" alt="" width="34" height="34">Open Resolution Desk</a>
+    <nav aria-label="Main">
+      <a href="./case.html">Case workspace</a>
+      <a href="./verify.html" aria-current="page">Verify a case file</a>
+      <a href="./protocol.html">For shops and agents</a>
+    </nav>
+    </div>
+    <p class="demo-strip">A demo for the Open Agentic Web Challenge. The shops are fictional. This is not legal advice.</p>
+  </header>
+  <main id="main" class="narrow">
+    <div id="verify-root" class="doc">
+      <h1>Verify a case file</h1>
+      <p>Anyone can check a case: the customer, the shop, or someone they ask for help. This page needs no account and sends the case nowhere. It checks that no step was changed, then recomputes the outcome from the shop's published terms.</p>
+      <div class="drop">
+        <label for="case-file">Case file (.json)</label>
+        <input id="case-file" type="file" accept="application/json,.json">
+        <form id="paste-form" class="inline-form" style="margin-top:12px">
+          <label class="visually-hidden" for="paste">Case link or case JSON</label>
+          <input id="paste" placeholder="Paste a case link or the case JSON" autocomplete="off">
+          <button type="submit" class="btn">Check it</button>
+        </form>
+      </div>
+      <section id="verify-result" class="verify-result" aria-live="polite"></section>
+    </div>
+  </main>
+  <footer class="site-footer"><p>Open Resolution Desk, an open-source demo for the Open Agentic Web Challenge.</p></footer>
+</body>
+</html>
