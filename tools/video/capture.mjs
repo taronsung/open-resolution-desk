@@ -121,9 +121,9 @@ async function waitTurn(label, { onDialog = null } = {}) {
 mark("desk:landing");
 await page.goto(`${config.desk}/`);
 await page.waitForSelector("html[data-ready], main", { timeout: 15000 });
-await pause(4000);
+await pause(3600);
 await page.mouse.wheel(0, 380);
-await pause(2000);
+await pause(1800);
 
 // 2. The shop, its own assistant, and the visitor's model settings.
 mark("shop:open");
@@ -134,7 +134,7 @@ await page.waitForFunction(() => !!window.__nsweb?.engine, null, { timeout: 3000
 mark("shop:settings");
 await click("#agent-app .ns-settings > summary");
 await page.evaluate(() => document.querySelector("#agent-app .ns-settings-body")?.scrollIntoView({ behavior: "smooth", block: "center" }));
-await pause(3200);
+await pause(2900);
 await click("#agent-app .ns-settings > summary");
 await scrollTo("#assistant");
 await pause(300);
@@ -165,10 +165,10 @@ await click('dialog.page-dialog[open] button[value="allow"]');
 await page.waitForSelector(".verdict");
 mark("desk:outcome");
 await scrollTo("#step-outcome", "start");
-await pause(4200);
+await pause(3800);
 await scrollTo("#step-terms .terms-status", "center");
 mark("desk:terms-status");
-await pause(3000);
+await pause(2600);
 await scrollTo("#step-outcome", "start");
 await pause(1000);
 
@@ -210,7 +210,7 @@ await pause(800);
 mark("office:open");
 await page.goto(shopHref);
 await page.waitForSelector("#bo-case .checks");
-await pause(4600);
+await pause(4200);
 mark("office:confirm");
 await click("#bo-case .bo-actions .btn.primary");
 await page.waitForSelector("dialog.page-dialog[open]");
@@ -228,7 +228,19 @@ mark("desk:settled");
 await page.goto(back);
 await page.waitForSelector(".settled");
 await scrollTo("#step-agreement", "start");
-await pause(4800);
+await pause(3800);
+
+// 9. The specification checks: the runtime's own stop for a composition cycle,
+// run on small test networks with the runtime's mock model.
+mark("spec:open");
+await page.goto(`${config.desk}/spec-checks/cycle/`);
+await page.waitForSelector("html[data-ready='true']", { timeout: 30000 });
+await pause(1300);
+await click("[data-run]");
+await page.waitForSelector("#check-result[data-state='stopped']", { timeout: 30000 });
+mark("spec:stopped");
+await scrollTo("#check-result", "center");
+await pause(3600);
 mark("end");
 
 const raw = await page.video().path();

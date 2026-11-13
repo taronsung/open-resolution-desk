@@ -31,7 +31,7 @@ function describe(url) {
     shown += `#${key}=${value.slice(0, 10)}…`;
   }
   let site = "";
-  if (u.host === "taronsung.github.io") site = "Open Resolution Desk";
+  if (u.host === "taronsung.github.io") site = u.pathname.includes("/spec-checks/") ? "Open Resolution Desk: specification checks" : "Open Resolution Desk";
   else if (u.pathname.includes("backoffice")) site = "Brackenlight Home (fictional shop): case page";
   else if (u.pathname.startsWith("/brackenlight")) site = "Brackenlight Home (fictional shop)";
   else if (u.pathname.startsWith("/coppice")) site = "Coppice Cycles (fictional shop)";
