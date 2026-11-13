@@ -34,6 +34,19 @@ const DECISION_TEXT = {
   incomplete: "Incomplete",
 };
 
+/**
+ * The line under the decision word: the remedy and its value when eligible,
+ * otherwise the reason, without repeating the decision word above it.
+ */
+function verdictLine(outcome) {
+  if (outcome.decision === "eligible") {
+    const shipping = outcome.return_shipping === "merchant" ? " The shop pays return shipping."
+      : outcome.return_shipping === "customer" ? " You pay return shipping." : "";
+    return `${REMEDIES[outcome.remedy]}, value ${money(outcome.refund.total_cents, outcome.currency)}.${shipping}`;
+  }
+  return summarizeOutcome(outcome).replace(/^[^:]+:\s*/, "");
+}
+
 /** Today's date in the visitor's time zone, as YYYY-MM-DD. */
 export function today() {
   const now = new Date();
@@ -858,7 +871,7 @@ export class DeskPage {
     const currency = outcome.currency;
     const head = el("div", { class: "verdict", "data-decision": outcome.decision },
       el("p", { class: "verdict-word", text: DECISION_TEXT[outcome.decision] }),
-      el("p", { class: "verdict-line", text: summarizeOutcome(outcome).replace(/^[^:]+:\s*/, "") }));
+      el("p", { class: "verdict-line", text: verdictLine(outcome) }));
     const checks = el("ol", { class: "checks" }, outcome.checks.map((c) =>
       el("li", { "data-passed": c.passed === true ? "yes" : c.passed === false ? "no" : "open" },
         el("span", { class: "mark", "aria-hidden": "true", text: c.passed === true ? "✓" : c.passed === false ? "✕" : "?" }),
