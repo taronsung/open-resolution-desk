@@ -216,7 +216,7 @@ export class ShopPage {
       terms_version_on_receipt: order.terms.version,
       next: outcome.decision === "eligible"
         ? "A return label would be emailed. This demo shop sends nothing."
-        : "The page now shows a button that opens this case at the Open Resolution Desk. To add the customer's own account to it, call website_prepare_desk_handoff.",
+        : "Tell the customer this decision and the terms version it used. Nothing has been sent to the Open Resolution Desk. If the customer disagrees, clause 5.1 lets them take the case there, and the page already shows the button. Wait until they say they disagree before you contact the desk or call website_prepare_desk_handoff.",
     };
   }
 
@@ -241,7 +241,7 @@ export class ShopPage {
     this.found = order;
     this.handoff = { link, order_id: order.order_id };
     this.changed();
-    return { ok: true, link, note: "The page shows a button that opens the case at the Open Resolution Desk in a new tab." };
+    return { ok: true, link, note: "Nothing was sent. The page shows a button that opens the case at the Open Resolution Desk in a new tab. The case starts only when the customer opens it." };
   }
 
   // ------------------------------------------------------------- the cart
