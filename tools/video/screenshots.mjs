@@ -148,6 +148,19 @@ async function openSample(page, sample) {
 
   await page.goto(`${DESK}/protocol.html`);
   await shot(page, "desktop/14-protocol-for-shops-and-agents.png");
+
+  // The specification checks: the hub table and two of the runtime's visible stops.
+  await page.goto(`${DESK}/spec-checks/`);
+  await shot(page, "desktop/15-spec-checks-section-6.png");
+  for (const [kind, file] of [["cycle", "16-spec-check-composition-cycle.png"], ["budget", "17-spec-check-over-budget.png"]]) {
+    await page.goto(`${DESK}/spec-checks/${kind}/`);
+    await page.waitForSelector("html[data-ready='true']");
+    await page.click("[data-run]");
+    await page.waitForSelector("#check-result[data-state='stopped']");
+    await page.waitForFunction(() => document.querySelector(".ns-inputbar")?.dataset.turnActive === "false");
+    await scrollTo(page, "#check-result", "start");
+    await shot(page, `desktop/${file}`);
+  }
   await context.close();
 }
 
