@@ -99,6 +99,14 @@ async function openSample(page, sample) {
   await scrollTo(page, "#step-outcome");
   await shot(page, "desktop/06-outcome-under-the-pinned-terms.png");
   if (withModel) {
+    // The clause question goes to the terms analyst, the second agent in the desk's network.
+    await turn(page, "What does clause 2.1 of my terms say?");
+    await page.evaluate(() => document.querySelector("#ns-msgs .ns-msg.bot:last-of-type")?.scrollIntoView({ block: "center" }));
+    await shot(page, "desktop/06b-terms-analyst-quotes-the-clause.png");
+    await page.click("#agent-app button:has-text('Developer')");
+    await page.evaluate(() => document.querySelector('[data-ns-slot="agents"]')?.scrollIntoView({ block: "start" }));
+    await shot(page, "desktop/06c-desk-network-two-agents.png");
+    await page.click("#agent-app button:has-text('Developer')");
     await turn(page, "Does the shop have anything to add? Please ask them.");
     await page.evaluate(() => document.querySelector(".across")?.scrollIntoView({ block: "center" }));
     await page.waitForTimeout(300);
@@ -181,16 +189,6 @@ async function openSample(page, sample) {
   await page.waitForSelector(".settled");
   await scrollTo(page, ".settled", "center");
   await shot(page, "mobile/05-settled.png");
-  if (withModel) {
-    await page.goto(`${DESK}/case.html#sample=brackenlight-BL-2207`);
-    await page.tap('[data-action="check-terms"]');
-    await page.tap('dialog.page-dialog button[value="allow"]');
-    await page.waitForSelector(".verdict");
-    await page.waitForFunction(() => !!window.__nsweb?.engine, null, { timeout: 30000 });
-    await turn(page, "The shop said no. Why does the desk say yes?");
-    await scrollTo(page, "#ns-msgs .ns-msg.bot:last-of-type", "center");
-    await shot(page, "mobile/06-case-assistant-explains.png");
-  }
   await context.close();
 }
 await browser.close();

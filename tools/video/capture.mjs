@@ -121,9 +121,9 @@ async function waitTurn(label, { onDialog = null } = {}) {
 mark("desk:landing");
 await page.goto(`${config.desk}/`);
 await page.waitForSelector("html[data-ready], main", { timeout: 15000 });
-await pause(4500);
+await pause(4000);
 await page.mouse.wheel(0, 380);
-await pause(2500);
+await pause(2000);
 
 // 2. The shop, its own assistant, and the visitor's model settings.
 mark("shop:open");
@@ -134,16 +134,16 @@ await page.waitForFunction(() => !!window.__nsweb?.engine, null, { timeout: 3000
 mark("shop:settings");
 await click("#agent-app .ns-settings > summary");
 await page.evaluate(() => document.querySelector("#agent-app .ns-settings-body")?.scrollIntoView({ behavior: "smooth", block: "center" }));
-await pause(3600);
+await pause(3200);
 await click("#agent-app .ns-settings > summary");
 await scrollTo("#assistant");
 await pause(300);
 await say("Hi. Can I return the lamp from order BL-2207? My email is mina.park@example.com. I changed my mind. It is unused and still in its box.", "shop1");
 await waitTurn("shop1");
-await pause(3500);
+await pause(3200);
 await say("I disagree. I bought it in early October, before your terms changed. What can I do?", "shop2");
 await waitTurn("shop2");
-await pause(3500);
+await pause(3200);
 mark("shop:handoff");
 await scrollTo("#order-body .handoff", "center");
 const handoff = page.locator("#order-body .handoff a.btn.primary");
@@ -170,17 +170,29 @@ await scrollTo("#step-terms .terms-status", "center");
 mark("desk:terms-status");
 await pause(3000);
 await scrollTo("#step-outcome", "start");
-await pause(1200);
+await pause(1000);
 
-// 4. The shop's representative network, loaded by URL, runs in this browser.
+// 4. A clause question: the case assistant hands it to the terms analyst, the
+// second agent in the desk's network. The runtime's developer view shows the graph.
+await say("What does clause 2.1 of my terms say?", "desk0");
+await waitTurn("desk0");
+await pause(3000);
+mark("desk:graph");
+await click("#agent-app button:has-text('Developer')");
+await page.evaluate(() => document.querySelector('[data-ns-slot="agents"]')?.scrollIntoView({ behavior: "smooth", block: "start" }));
+await pause(4200);
+await click("#agent-app button:has-text('Developer')");
+await pause(400);
+
+// 5. The shop's representative network, loaded by URL, runs in this browser.
 await say("Does the shop have anything to add? Please ask them.", "desk1");
 await waitTurn("desk1");
-await pause(3500);
+await pause(3200);
 mark("desk:across");
 await page.evaluate(() => document.querySelector(".across")?.scrollIntoView({ behavior: "smooth", block: "center" }));
 await pause(4500);
 
-// 5. The customer chooses, and the page asks to confirm.
+// 6. The customer chooses, and the page asks to confirm.
 await page.evaluate(() => document.querySelector("#ns-input")?.scrollIntoView({ behavior: "smooth", block: "center" }));
 await pause(700);
 await say("I'll take the refund.", "desk2");
@@ -194,11 +206,11 @@ await moveTo(shopLink);
 const shopHref = await shopLink.getAttribute("href");
 await pause(800);
 
-// 6. The shop checks the case on its own site and confirms.
+// 7. The shop checks the case on its own site and confirms.
 mark("office:open");
 await page.goto(shopHref);
 await page.waitForSelector("#bo-case .checks");
-await pause(5200);
+await pause(4600);
 mark("office:confirm");
 await click("#bo-case .bo-actions .btn.primary");
 await page.waitForSelector("dialog.page-dialog[open]");
@@ -211,12 +223,12 @@ const back = await page.getAttribute("#bo-case a.btn.primary", "href");
 await moveTo(page.locator("#bo-case a.btn.primary"));
 await pause(500);
 
-// 7. Back at the desk: settled.
+// 8. Back at the desk: settled.
 mark("desk:settled");
 await page.goto(back);
 await page.waitForSelector(".settled");
 await scrollTo("#step-agreement", "start");
-await pause(5500);
+await pause(4800);
 mark("end");
 
 const raw = await page.video().path();

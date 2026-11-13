@@ -68,7 +68,8 @@ const rule = (label) => {
   return 1;
 };
 // A slow model call should not stretch the video: waiting parts have a ceiling.
-const ceiling = (label) => (/:sent$/.test(label) ? 2.6 : /:allowed$/.test(label) ? 3.2 : /:confirmed$/.test(label) && !label.startsWith("office") ? 2 : Infinity);
+// The clause question gets a little longer, so the "Terms Analyst is working" line can be read.
+const ceiling = (label) => (label === "desk0:sent" ? 3.4 : /:sent$/.test(label) ? 2.6 : /:allowed$/.test(label) ? 3.2 : /:confirmed$/.test(label) && !label.startsWith("office") ? 2 : Infinity);
 const points = [{ t: 0.4, label: "start" }, ...timeline.marks.filter((m) => m.t > 0.4 && m.label !== "end")];
 const parts = points.map((p, i) => {
   const a = p.t;
