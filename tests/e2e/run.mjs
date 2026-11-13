@@ -189,6 +189,24 @@ await check("the agent runtime boots each published network without a key", asyn
   }
 });
 
+await check("on a short laptop screen nothing covers the chat input", async () => {
+  const short = await browser.newContext({ viewport: { width: 1280, height: 680 } });
+  for (const url of [`${DESK}/case.html#sample=brackenlight-BL-2207`, `${BRACKENLIGHT}/`]) {
+    const page = watch(await short.newPage());
+    await page.goto(url);
+    await page.waitForFunction(() => !!window.__nsweb?.engine, null, { timeout: 30000 });
+    await page.locator("#ns-input").scrollIntoViewIfNeeded();
+    const covered = await page.evaluate(() => {
+      const box = document.querySelector("#ns-input").getBoundingClientRect();
+      const hit = document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2);
+      return hit && hit.id !== "ns-input" ? (hit.closest("[data-ns-slot]")?.dataset.nsSlot || hit.tagName) : null;
+    });
+    assert.equal(covered, null, `${url}: the chat input is covered by ${covered}`);
+    await page.close();
+  }
+  await short.close();
+});
+
 await check("phone width: the sample case settles at 390 px without sideways scrolling", async () => {
   const phone = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
   const page = watch(await phone.newPage());

@@ -266,7 +266,8 @@ table.amounts tr.total th, table.amounts tr.total td { font-weight: 750; border-
   --ns-msgbg: #EEF1F8;
   --ns-muted: var(--muted);
 }
-#agent-app.ns-composed-app [data-ns-slot="chat"] { height: min(58vh, 560px); }
+/* The runtime gives the chat a 480 px minimum; a shorter slot let the settings slot cover the input on short screens. */
+#agent-app.ns-composed-app [data-ns-slot="chat"] { height: clamp(480px, 58vh, 560px); }
 #agent-app .ns-chat { background: var(--ns-bg); border: 1px solid var(--rule); border-radius: var(--radius); }
 #agent-app input[type="checkbox"], #agent-app input[type="radio"] { width: auto; min-height: 0; }
 #agent-app input { min-height: 0; }
