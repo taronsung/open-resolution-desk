@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spec check: composition cycle, Open Resolution Desk</title>
+  <meta name="description" content="A reproducible check that the runtime stops a composition cycle between two networks.">
+  <link rel="icon" href="../../img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../css/desk.css">
+  <script type="module" src="../check.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-top">
+    <div class="site-header">
+    <a class="wordmark" href="../../"><img src="../../img/mark.svg" alt="" width="34" height="34">Open Resolution Desk</a>
+    <nav aria-label="Main">
+      <a href="../../case.html">Case workspace</a>
+      <a href="../../verify.html">Verify a case file</a>
+      <a href="../../protocol.html">For shops and agents</a>
+    </nav>
+    </div>
+    <p class="demo-strip">A demo for the Open Agentic Web Challenge. The shops are fictional. This is not legal advice.</p>
+  </header>
+  <main id="main" class="narrow doc spec-check" data-check="cycle">
+    <p class="crumb"><a href="../">Spec checks</a></p>
+    <h1>Composition cycle</h1>
+    <p class="lede-small">“Stop an invalid network, a composition cycle, an over-budget request, and a denied origin with visible errors.” Minimum Viable Specification, section 6.</p>
+    <h2>Test networks</h2>
+    <ul>
+      <li><a href="./cycle_a.network.json"><code>cycle_a</code></a>: this page's network. It calls network B.</li>
+      <li><a href="./b/cycle_b.network.json"><code>cycle_b</code></a>: network B, published at its own path on this site. It calls network A again, which closes the cycle.</li>
+    </ul>
+    <h2>Expected result</h2>
+    <p>The runtime runs B, then refuses to run A again inside the same request. It reports that the network is already in this request's call chain.</p>
+    <p><button type="button" class="btn primary" data-run disabled>Run the check</button></p>
+    <div id="check-result" class="check-result" role="status" aria-live="polite" data-state="idle"><strong>Not run yet.</strong></div>
+    <section class="check-runtime" aria-labelledby="runtime-title">
+      <h2 id="runtime-title">The runtime</h2>
+      <p class="small">This page runs the agentic-web browser runtime, unchanged, on the test network named below. The runtime's built-in mock model calls each tool once, in order, so the check needs no key and gives the same result every time. It does not use a model key saved for this site.</p>
+      <div id="agent-app">
+        <div data-ns-slot="header"></div>
+        <div data-ns-slot="chat"></div>
+        <div data-ns-slot="settings"></div>
+        <div data-ns-slot="agents"></div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><p>Open Resolution Desk, an open-source demo for the Open Agentic Web Challenge. <a href="https://github.com/taronsung/open-resolution-desk">Source code</a>.</p></footer>
+</body>
+</html>

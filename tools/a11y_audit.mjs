@@ -15,6 +15,7 @@ const SHOPS = args[1] || target.shops_root;
 const pages = [
   `${DESK}/`, `${DESK}/case.html`, `${DESK}/case.html#sample=brackenlight-BL-2207`, `${DESK}/verify.html`, `${DESK}/protocol.html`,
   `${SHOPS}/brackenlight/`, `${SHOPS}/brackenlight/terms.html`, `${SHOPS}/brackenlight/backoffice.html`, `${SHOPS}/coppice/`,
+  `${DESK}/spec-checks/`, `${DESK}/spec-checks/cycle/`,
 ];
 const browser = await chromium.launch();
 let total = 0;
@@ -79,6 +80,13 @@ for (const [label, viewport] of [["desktop", { width: 1360, height: 900 }], ["ph
   await page.click('dialog.page-dialog button[value="allow"]');
   await page.waitForSelector(".terms-status[data-kind='error']");
   await audit(page, label, "case: terms do not match the receipt");
+  // A spec check after it has run: the result box and the runtime's chat.
+  await page.goto(`${DESK}/spec-checks/budget/`);
+  await page.waitForSelector("html[data-ready='true']");
+  await page.click("[data-run]");
+  await page.waitForSelector("#check-result[data-state='stopped']");
+  await page.waitForFunction(() => document.querySelector(".ns-inputbar")?.dataset.turnActive === "false");
+  await audit(page, label, "spec check: result");
   await page.close();
   await context.close();
 }

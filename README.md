@@ -80,7 +80,7 @@ tools. The page still asks before each contact and each irreversible step.
 
 | Path | Contents |
 | --- | --- |
-| `src/desk` | Desk pages, case workspace, networks and site actions |
+| `src/desk` | Desk pages, case workspace, networks and site actions, and the specification checks with their test networks (`spec-checks/`) |
 | `src/shops` | Shared shop template, and data, terms and art for each fictional shop |
 | `src/common` | Shared UI: fingerprint mark, dialogs, WebMCP, fonts |
 | `protocol/v1` | The ord/1 protocol: canonical JSON, the decision function, case files |
@@ -104,6 +104,17 @@ npm run audit:a11y       # axe-core, WCAG 2.1 AA, desktop and phone widths
 npm run audit:a11y:prod  # the same audit against the published sites
 npm run publish:prod     # build for GitHub Pages into docs/ and the shops repository
 ```
+
+## Specification checks
+
+`docs/spec-checks/` (published at
+https://taronsung.github.io/open-resolution-desk/spec-checks/) says where each
+item of section 6 of the specification is shown, and runs the runtime's visible
+stops on small test networks: an invalid network, a composition cycle, an
+over-budget request and a denied origin. Each check page mounts the runtime
+unchanged with its built-in mock model, which calls each tool once in order,
+so the checks need no key and give the same result every time. The e2e run
+checks all four, and other runtimes can load the same test networks.
 
 ## Checking any agentic site
 

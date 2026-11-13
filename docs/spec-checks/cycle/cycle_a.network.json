@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "description": "Calls network B on this site. B calls this network again, which closes a cycle.",
+    "sample_queries": [
+      "Run the check."
+    ]
+  },
+  "llm_config": {
+    "model_name": "neuro-san-mock-browser"
+  },
+  "max_steps": 12,
+  "tools": [
+    {
+      "name": "cycle_runner",
+      "function": {
+        "description": "Runs the composition-cycle check.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "request": {
+              "type": "string",
+              "description": "What to check, in plain language."
+            }
+          },
+          "required": [
+            "request"
+          ]
+        }
+      },
+      "instructions": "Call each of your tools once, with the request you received, and report what each one returned. Do not add anything else.",
+      "tools": [
+        "/open-resolution-desk/spec-checks/cycle/b/cycle_b"
+      ]
+    }
+  ],
+  "link_labels": {
+    "/open-resolution-desk/spec-checks/cycle/b/cycle_b": "Cycle network B"
+  }
+}

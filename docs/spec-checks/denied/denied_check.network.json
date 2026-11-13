@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "description": "Calls a network on another origin that this site's manifest does not allow. The runtime asks the visitor first and then refuses the contact under the manifest's peer policy.",
+    "sample_queries": [
+      "Run the check."
+    ]
+  },
+  "llm_config": {
+    "model_name": "neuro-san-mock-browser"
+  },
+  "max_steps": 12,
+  "tools": [
+    {
+      "name": "denied_runner",
+      "function": {
+        "description": "Runs the denied-origin check.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "request": {
+              "type": "string",
+              "description": "What to check, in plain language."
+            }
+          },
+          "required": [
+            "request"
+          ]
+        }
+      },
+      "instructions": "Call each of your tools once, with the request you received, and report what each one returned. Do not add anything else.",
+      "tools": [
+        "https://ord-demo-shops.github.io/brackenlight/agents/brackenlight_claims"
+      ]
+    }
+  ],
+  "link_labels": {
+    "https://ord-demo-shops.github.io/brackenlight/agents/brackenlight_claims": "Brackenlight Home's representative"
+  }
+}

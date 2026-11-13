@@ -25,6 +25,8 @@ async function start() {
     });
     const engine = booted.engine;
     tidyLandmarks();
+    const log = document.querySelector("#ns-msgs");
+    if (log) { log.tabIndex = 0; log.setAttribute("aria-label", "Conversation"); }
     // Append the page's current state to the front agent's instructions on every
     // invocation, as the agentic-web pizza example does. Data only.
     const network = engine.top.network;

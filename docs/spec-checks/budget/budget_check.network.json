@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "description": "Calls five peer networks on this site. The runtime allows four remote calls per query, so it should refuse the fifth.",
+    "sample_queries": [
+      "Run the check."
+    ]
+  },
+  "llm_config": {
+    "model_name": "neuro-san-mock-browser"
+  },
+  "max_steps": 12,
+  "tools": [
+    {
+      "name": "budget_runner",
+      "function": {
+        "description": "Runs the over-budget check.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "request": {
+              "type": "string",
+              "description": "What to check, in plain language."
+            }
+          },
+          "required": [
+            "request"
+          ]
+        }
+      },
+      "instructions": "Call each of your tools once, with the request you received, and report what each one returned. Do not add anything else.",
+      "tools": [
+        "/open-resolution-desk/spec-checks/budget/peers/peer_1",
+        "/open-resolution-desk/spec-checks/budget/peers/peer_2",
+        "/open-resolution-desk/spec-checks/budget/peers/peer_3",
+        "/open-resolution-desk/spec-checks/budget/peers/peer_4",
+        "/open-resolution-desk/spec-checks/budget/peers/peer_5"
+      ]
+    }
+  ],
+  "link_labels": {
+    "/open-resolution-desk/spec-checks/budget/peers/peer_1": "Peer network 1",
+    "/open-resolution-desk/spec-checks/budget/peers/peer_2": "Peer network 2",
+    "/open-resolution-desk/spec-checks/budget/peers/peer_3": "Peer network 3",
+    "/open-resolution-desk/spec-checks/budget/peers/peer_4": "Peer network 4",
+    "/open-resolution-desk/spec-checks/budget/peers/peer_5": "Peer network 5"
+  }
+}

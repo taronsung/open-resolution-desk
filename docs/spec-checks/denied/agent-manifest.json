@@ -1,0 +1,36 @@
+{
+  "brand": "Spec check: denied origin",
+  "networks": [
+    {
+      "name": "denied_check",
+      "front_man": "denied_runner",
+      "hocon": "./denied_check.network.json",
+      "description": "Calls a network on an origin that this manifest does not allow.",
+      "tags": [
+        "spec-check",
+        "test-fixture"
+      ],
+      "sample_queries": [
+        "Run the check."
+      ]
+    }
+  ],
+  "llm_router": {
+    "base_url": "browser://mock",
+    "mock": true
+  },
+  "allowed_peers": [],
+  "peer_policy": {
+    "mode": "closed",
+    "deny_origins": [],
+    "note": "Test fixture. No other origin is allowed, so the runtime must refuse the peer below."
+  },
+  "deployment": {
+    "mode": "static",
+    "self_contained_runtime": false,
+    "browser_mock": true,
+    "direct_byok": false,
+    "direct_mcp_requires_cors": true,
+    "public_mcp_facade": false
+  }
+}

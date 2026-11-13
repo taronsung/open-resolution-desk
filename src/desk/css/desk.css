@@ -290,6 +290,19 @@ dialog.page-dialog pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 0
 .dialog-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 body > dialog h2 { margin: 0 0 12px; }
 
+/* Spec-check pages */
+.crumb { margin: 0 0 4px; font-size: 0.9375rem; }
+.lede-small { color: var(--muted); }
+.check-result { margin: 14px 0 24px; padding: 14px 16px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--sheet); }
+.check-result p { margin: 8px 0 0; }
+.check-result code { overflow-wrap: anywhere; }
+.check-result[data-state="stopped"] { border-color: var(--pine); background: #EAF4EE; }
+.check-result[data-state="missing"], .check-result[data-state="error"] { border-color: var(--brick); background: #FBEDEA; }
+.check-steps { margin: 10px 0 0; padding-left: 20px; font-size: 0.9375rem; color: var(--muted); overflow-wrap: anywhere; }
+/* Long tool names and JSON in the runtime's chat wrap instead of widening the page. */
+#agent-app .ns-msg { overflow-wrap: anywhere; }
+.check-runtime { margin-top: 8px; }
+
 /* Verify and protocol pages */
 .narrow { max-width: 920px; }
 .doc h2 { margin-top: 1.6em; }

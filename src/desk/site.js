@@ -41,6 +41,8 @@ class AssistantMount {
       watchRouterErrors(booted.trace, status);
       AssistantMount.relabelStatus();
       tidyLandmarks();
+      const log = document.querySelector("#ns-msgs");
+      if (log) { log.tabIndex = 0; log.setAttribute("aria-label", "Conversation"); }
       page.onShopResolved = (shop) => AssistantMount.bindShop(engine, shop, page);
       const askForLink = engine.onLinkRequired;
       engine.onLinkRequired = async (info) => {

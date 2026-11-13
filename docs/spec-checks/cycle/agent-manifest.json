@@ -1,0 +1,36 @@
+{
+  "brand": "Spec check: composition cycle",
+  "networks": [
+    {
+      "name": "cycle_a",
+      "front_man": "cycle_runner",
+      "hocon": "./cycle_a.network.json",
+      "description": "Calls network B, which calls this network again.",
+      "tags": [
+        "spec-check",
+        "test-fixture"
+      ],
+      "sample_queries": [
+        "Run the check."
+      ]
+    }
+  ],
+  "llm_router": {
+    "base_url": "browser://mock",
+    "mock": true
+  },
+  "allowed_peers": [],
+  "peer_policy": {
+    "mode": "open",
+    "deny_origins": [],
+    "note": "Test fixture. It calls only networks published on this site."
+  },
+  "deployment": {
+    "mode": "static",
+    "self_contained_runtime": false,
+    "browser_mock": true,
+    "direct_byok": false,
+    "direct_mcp_requires_cors": true,
+    "public_mcp_facade": false
+  }
+}

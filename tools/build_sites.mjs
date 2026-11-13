@@ -145,7 +145,7 @@ for (const id of Object.keys(config.shops)) {
     BRAND_MARK: mark.trim(),
     HERO_ART: heroArt.trim(),
     HERO_LINE: id === "brackenlight"
-      ? "Every receipt names the returns terms that applied on the day you bought, so a later change never moves the goalposts on your order."
+      ? "Every receipt names the returns terms that applied on the day you bought. A later change to the terms does not apply to your order."
       : "Built by hand, sold with plain terms. Every receipt names the terms version that applies to it.",
     COLLECTION_TITLE: id === "brackenlight" ? "The collection" : "Wheels and parts",
   };

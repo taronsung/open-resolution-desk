@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "networks": {
+    "invalid_check": {}
+  }
+}

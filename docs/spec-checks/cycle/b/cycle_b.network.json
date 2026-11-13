@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "description": "Calls network A on this site, which called it. The runtime should stop the cycle.",
+    "sample_queries": [
+      "Run the check."
+    ]
+  },
+  "llm_config": {
+    "model_name": "neuro-san-mock-browser"
+  },
+  "max_steps": 12,
+  "tools": [
+    {
+      "name": "cycle_b_runner",
+      "function": {
+        "description": "The second network in the cycle.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "request": {
+              "type": "string",
+              "description": "What to check, in plain language."
+            }
+          },
+          "required": [
+            "request"
+          ]
+        }
+      },
+      "instructions": "Call each of your tools once, with the request you received, and report what each one returned. Do not add anything else.",
+      "tools": [
+        "/open-resolution-desk/spec-checks/cycle/cycle_a"
+      ]
+    }
+  ],
+  "link_labels": {
+    "/open-resolution-desk/spec-checks/cycle/cycle_a": "Cycle network A"
+  }
+}

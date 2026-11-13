@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Specification checks, Open Resolution Desk</title>
+  <meta name="description" content="Where Open Resolution Desk shows each item of section 6 of the agentic web specification, with reproducible checks of the runtime's visible stops.">
+  <link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/desk.css">
+  
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-top">
+    <div class="site-header">
+    <a class="wordmark" href="../"><img src="../img/mark.svg" alt="" width="34" height="34">Open Resolution Desk</a>
+    <nav aria-label="Main">
+      <a href="../case.html">Case workspace</a>
+      <a href="../verify.html">Verify a case file</a>
+      <a href="../protocol.html">For shops and agents</a>
+    </nav>
+    </div>
+    <p class="demo-strip">A demo for the Open Agentic Web Challenge. The shops are fictional. This is not legal advice.</p>
+  </header>
+  <main id="main" class="narrow doc">
+    <h1>Specification checks</h1>
+    <p>Section 6 of the Minimum Viable Specification for a Worldwide Agentic Web lists what an implementation should be able to demonstrate. This page says where Open Resolution Desk shows each item, and runs the four visible stops on small test networks.</p>
+    <table>
+      <thead><tr><th scope="col">Section 6 item</th><th scope="col">Where and how it is shown</th></tr></thead>
+      <tbody>
+        <tr><td>Publish a two-agent HOCON network and a manifest from an ordinary HTTPS web host.</td><td>The desk's <a href="../desk_clerk.network.json">case network</a> has two agents, a case assistant and a terms analyst (<a href="../desk_clerk.hocon">HOCON source</a>, <a href="../agent-manifest.json">manifest</a>), on GitHub Pages.</td></tr>
+        <tr><td>Load and run that network in a browser with the site's published default router and model; if BYOK is offered, also demonstrate the user-selected path.</td><td>The checks on this page run with the router their manifests publish (the runtime's mock), with no key. The desk and the shops offer BYOK under each chat, tested with a local model.</td></tr>
+        <tr><td>Call an internal agent and at least one grounded capability through MCP or a registered local site action.</td><td>On the <a href="../case.html#sample=brackenlight-BL-2207">case page</a>, ask what a clause says: the case assistant calls the terms analyst, which reads the case through a site action. The Developer view shows the call.</td></tr>
+        <tr><td>After user approval, load an exact named network from a second origin and run it locally in the caller's browser.</td><td>The desk loads the shop's representative network from ord-demo-shops.github.io after a consent card, and the shops load the desk's procedure guide. The Across sites panel lists each load.</td></tr>
+        <tr><td>When a user key is active, show that the second site never receives it and cannot change the caller's router.</td><td>The Across sites panel names the model router as the only place the key goes. The model test records every request and finds the test key only in requests to the router. Peers run with the caller's router.</td></tr>
+        <tr><td>Show that private context is absent at the peer unless a named field is explicitly allowed.</td><td>The page puts the customer's contact in private context, and the case network allows only <code>case_ref</code> downstream. The Across sites panel shows the fields passed to the shop's network: <code>case_ref</code> only.</td></tr>
+        <tr><td>Stop an invalid network, a composition cycle, an over-budget request, and a denied origin with visible errors.</td><td>The four checks below, each on its own page: <a href="./invalid/">invalid network</a>, <a href="./cycle/">composition cycle</a>, <a href="./budget/">over-budget request</a> and <a href="./denied/">denied origin</a>.</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="stops">The visible stops</h2>
+    <p>This page runs the agentic-web browser runtime, unchanged, on a small test network. The runtime's built-in mock model calls each tool once, in order, so the check needs no key and gives the same result every time. It does not use a model key saved for this site.</p>
+    <ul>
+      <li><a href="./invalid/">Invalid network</a>: The runtime fetches the broken network's manifest and definition, validates it, and refuses to run it.</li>
+      <li><a href="./cycle/">Composition cycle</a>: The runtime runs B, then refuses to run A again inside the same request.</li>
+      <li><a href="./budget/">Over-budget request</a>: The runtime allows four remote calls per query and one call per peer.</li>
+      <li><a href="./denied/">Denied origin</a>: The runtime asks before contacting the other origin.</li>
+    </ul>
+    <p>Each test network is published like any other: a manifest, a network definition in JSON, and <code>links.json</code>. Another runtime can load the same files to check its own behaviour.</p>
+
+    <h2 id="checker">Check any site's public files</h2>
+    <p>The repository includes <code>tools/check_agentic_site.mjs</code>, which reads a site's manifest, network definitions and <code>links.json</code> as a browser on another origin would, checks CORS and HTTPS, validates each network with the runtime's own parser and validator, and follows the peer networks they name. With Node.js 22 or newer:</p>
+    <pre tabindex="0" aria-label="Command">node tools/check_agentic_site.mjs https://taronsung.github.io/open-resolution-desk/</pre>
+    <p>It finds the same fault in the invalid-network check without a browser: run on <code>https://taronsung.github.io/open-resolution-desk/spec-checks/invalid/</code>, it follows the call to the broken network and reports two failures that name the missing tool <code>ghost_agent</code>.</p>
+    <p><a href="https://github.com/taronsung/open-resolution-desk">Source code</a></p>
+  </main>
+  <footer class="site-footer"><p>Open Resolution Desk, an open-source demo for the Open Agentic Web Challenge. <a href="https://github.com/taronsung/open-resolution-desk">Source code</a>.</p></footer>
+</body>
+</html>

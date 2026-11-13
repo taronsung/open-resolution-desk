@@ -1,0 +1,88 @@
+{
+  "brand": "Spec check: five peer networks",
+  "networks": [
+    {
+      "name": "peer_1",
+      "front_man": "peer_agent",
+      "hocon": "./peer_1.network.json",
+      "description": "Peer network 1 for the over-budget check.",
+      "tags": [
+        "spec-check",
+        "test-fixture"
+      ],
+      "sample_queries": [
+        "Run the check."
+      ]
+    },
+    {
+      "name": "peer_2",
+      "front_man": "peer_agent",
+      "hocon": "./peer_2.network.json",
+      "description": "Peer network 2 for the over-budget check.",
+      "tags": [
+        "spec-check",
+        "test-fixture"
+      ],
+      "sample_queries": [
+        "Run the check."
+      ]
+    },
+    {
+      "name": "peer_3",
+      "front_man": "peer_agent",
+      "hocon": "./peer_3.network.json",
+      "description": "Peer network 3 for the over-budget check.",
+      "tags": [
+        "spec-check",
+        "test-fixture"
+      ],
+      "sample_queries": [
+        "Run the check."
+      ]
+    },
+    {
+      "name": "peer_4",
+      "front_man": "peer_agent",
+      "hocon": "./peer_4.network.json",
+      "description": "Peer network 4 for the over-budget check.",
+      "tags": [
+        "spec-check",
+        "test-fixture"
+      ],
+      "sample_queries": [
+        "Run the check."
+      ]
+    },
+    {
+      "name": "peer_5",
+      "front_man": "peer_agent",
+      "hocon": "./peer_5.network.json",
+      "description": "Peer network 5 for the over-budget check.",
+      "tags": [
+        "spec-check",
+        "test-fixture"
+      ],
+      "sample_queries": [
+        "Run the check."
+      ]
+    }
+  ],
+  "llm_router": {
+    "base_url": "browser://mock",
+    "mock": true
+  },
+  "allowed_peers": [],
+  "peer_policy": {
+    "mode": "open",
+    "deny_origins": [],
+    "note": "Test fixture. It calls only networks published on this site."
+  },
+  "deployment": {
+    "mode": "static",
+    "self_contained_runtime": false,
+    "browser_mock": true,
+    "direct_byok": false,
+    "direct_mcp_requires_cors": true,
+    "public_mcp_facade": false
+  }
+}

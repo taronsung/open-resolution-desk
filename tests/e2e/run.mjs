@@ -229,6 +229,38 @@ await check("the agent runtime boots each published network without a key", asyn
   }
 });
 
+const STOP_CHECKS = [
+  ["invalid", "an invalid network", /Network 'broken_network' \([^)]*\) failed validation: Agent 'broken_front' references missing tool 'ghost_agent'\./],
+  ["cycle", "a composition cycle", /Skipped Cycle network A: that network is already in this request's call chain\./],
+  ["budget", "an over-budget request", /Skipped Peer network 5: the per-query limit of 4 third-party calls was reached\./],
+  ["denied", "a denied origin", /Policy: ord-demo-shops\.github\.io is not in denied_check's allowed_peers/],
+];
+for (const [kind, what, expected] of STOP_CHECKS) {
+  await check(`spec checks: the runtime stops ${what} with a visible error`, async () => {
+    const page = watch(await context.newPage());
+    const shopRequests = [];
+    page.on("request", (r) => { if (r.url().includes("ord-demo-shops.github.io")) shopRequests.push(r.url()); });
+    await page.goto(`${DESK}/spec-checks/${kind}/`);
+    await page.waitForSelector("html[data-ready='true']", { timeout: 30000 });
+    await page.click("[data-run]");
+    for (let i = 0; i < 300; i++) {
+      const consent = await page.$(".ns-consent .ns-consent-actions button[data-d='allow']");
+      if (consent) await consent.click();
+      const state = await page.getAttribute("#check-result", "data-state");
+      if (state !== "running" && state !== "idle") break;
+      await page.waitForTimeout(100);
+    }
+    assert.equal(await page.getAttribute("#check-result", "data-state"), "stopped");
+    assert.match(await page.textContent("#check-result"), expected);
+    // The runtime's own message also reaches the chat, through the mock model's summary.
+    await page.waitForFunction(() => document.querySelector(".ns-inputbar")?.dataset.turnActive === "false", null, { timeout: 30000 });
+    const chat = await page.$$eval("#ns-msgs .ns-msg.bot", (els) => els.map((e) => e.innerText).join(" "));
+    assert.match(chat, expected);
+    if (kind === "denied") assert.deepEqual(shopRequests, []);
+    await page.close();
+  });
+}
+
 await check("browsers with WebMCP get the desk's and the shop's operations as tools", async () => {
   const page = watch(await context.newPage());
   await page.addInitScript(() => {
