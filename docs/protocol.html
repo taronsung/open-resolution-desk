@@ -86,6 +86,15 @@
       </tbody>
     </table>
 
+    <h2 id="tools">Source and tools</h2>
+    <p>Everything on this site and the two demo shops is in <a href="https://github.com/taronsung/open-resolution-desk">github.com/taronsung/open-resolution-desk</a> under the Apache License 2.0. These parts are meant for reuse:</p>
+    <ul>
+      <li><code>protocol/v1</code>: canonical JSON with SHA-256, the decision function and hash-chained case files, with unit tests. A shop or an agent can run the same code to check an outcome.</li>
+      <li><code>tools/check_agentic_site.mjs</code>: checks any agentic site's published manifest, network definitions and <code>links.json</code> against the MVP specification, the way a browser on another origin reads them, and follows the peer networks they name. It validates each network with the runtime's own parser and validator.</li>
+      <li><code>tools/serve.py</code>: a static server that sends the headers GitHub Pages sends, for testing two origins on one machine.</li>
+      <li>The desk's public procedure guide, <code>https://taronsung.github.io/open-resolution-desk/agents/desk_preview</code>, which any agentic website can load by URL to explain the procedure to its visitors.</li>
+    </ul>
+
     <h2 id="limits">Limits of this demo</h2>
     <ul>
       <li>Steps are hashed, not signed. A case file shows that nothing changed after a step was recorded, but not who recorded it. A production version would sign events with keys each party publishes in its manifest.</li>
@@ -94,6 +103,6 @@
       <li>Everything is tab-scoped. There are no accounts, notifications or reminders: links are the transport.</li>
     </ul>
   </main>
-  <footer class="site-footer"><p>Open Resolution Desk, an open-source demo for the Open Agentic Web Challenge.</p></footer>
+  <footer class="site-footer"><p>Open Resolution Desk, an open-source demo for the Open Agentic Web Challenge. <a href="https://github.com/taronsung/open-resolution-desk">Source code</a>.</p></footer>
 </body>
 </html>
