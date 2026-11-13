@@ -52,7 +52,7 @@ under today's terms and refuses. The desk applies the terms on the receipt.
 
 | Network | Where | Front agent and tools |
 | --- | --- | --- |
-| `desk_clerk` | desk, `agent-manifest.json` | `case_assistant` with 5 website actions and the `shop_representative` link slot |
+| `desk_clerk` | desk, `agent-manifest.json` | `case_assistant` with 5 website actions, the `shop_representative` link slot, and `terms_analyst`, an internal agent it calls for clause texts |
 | `desk_preview` | desk, `agents/agent-manifest.json` | `procedure_guide`, a public network other sites load by URL |
 | `brackenlight_assistant`, `coppice_assistant` | each shop, `agent-manifest.json` | `shop_assistant` with 4 website actions and the desk's `desk_preview` by URL |
 | `brackenlight_claims`, `coppice_claims` | each shop, `agents/agent-manifest.json` | `shop_representative`, whose instructions are the shop's published mandate |
@@ -133,6 +133,15 @@ ask whether the page may access apps and services on this device: allow it.
 checks that a test key never leaves for any host but the model router.
 
 ## Notes for small models
+
+The desk's network has two agents. The case assistant explains outcomes from the
+case data, which holds each check and its clause number but not the clause
+text. For the text of a clause it calls the terms analyst, which reads the
+pinned version and quotes it. With the local 30B model the assistant handed
+every clause question to the analyst in our runs, and the analyst added about
+2.5 seconds. The runtime's generative UI (CRUSE) was tried for an intake form
+and a choice of options. With the same model no widget appeared in four runs,
+and once the reply pointed to a widget that was not there, so it is off.
 
 The desk's assistant gets the current case appended to its instructions on
 every call, as the agentic-web pizza example does with its menu and cart. The

@@ -1,11 +1,13 @@
 // with-model.mjs - checks the assistants with a real model, on the published sites
 // (default) or the local build (--dev). The flow: the shop's assistant refuses
 // under today's terms and loads the desk's public network (a peer on another
-// origin) -> handoff -> the desk's outcome -> the desk's assistant loads the
-// shop's representative (a peer) -> the customer accepts -> the shop confirms on
-// its own site -> settled. Then the Coppice case, and the page's hint when the
-// browser blocks a model server on this computer. A unique test key shows that
-// the key goes to the model router and nowhere else.
+// origin) -> handoff -> the desk's outcome -> a clause question that the desk's
+// case assistant hands to its terms analyst (a second agent in the same network)
+// -> the desk's assistant loads the shop's representative (a peer) -> the
+// customer accepts -> the shop confirms on its own site -> settled. Then the
+// Coppice case, a case without a claim (no assumed facts), and the page's hint
+// when the browser blocks a model server on this computer. A unique test key
+// shows that the key goes to the model router and nowhere else.
 //
 // Usage: node tests/e2e/with-model.mjs [--dev] [--router URL] [--model NAME]
 // Default router: LM Studio on http://127.0.0.1:1234/v1 (lms server start --cors).
@@ -116,6 +118,11 @@ await desk.waitForSelector(".verdict");
 note(/Eligible[\s\S]*\$79\.00/.test(await desk.textContent(".verdict")), "desk outcome under version 2: eligible, $79.00");
 const d1 = await turn(desk, "The shop said no. Why does the desk say yes?");
 note(/version 2|120|v2/i.test(d1.reply), "desk assistant explains that version 2 applies");
+const agentsBefore = await desk.evaluate(() => window.__nsweb.trace.events.length);
+const dc = await turn(desk, "What does clause 2.1 of my terms say?");
+const analyst = await desk.evaluate((n) => window.__nsweb.trace.events.slice(n).some((e) => e.kind === "agent" && e.phase === "start" && e.agent === "terms_analyst"), agentsBefore);
+note(analyst, "the case assistant hands a clause question to the terms analyst, a second agent in the desk's network");
+note(/120 days/i.test(dc.reply) && /unused|original packaging/i.test(dc.reply), "the clause is quoted from the pinned version 2");
 const d2 = await turn(desk, "Does the shop have anything to add? Please ask them.");
 note(d2.consents.some((c) => c.includes(SHOP_HOST)), `desk assistant asks before loading the shop's representative from ${SHOP_HOST}`);
 note(/115|credit/i.test(d2.reply), "the representative's store credit offer reaches the customer");
@@ -159,7 +166,25 @@ note(/40|credit|workshop/i.test(c1.reply), "Coppice representative offers its pu
 const c2 = await turn(cc, "I'll take the workshop credit.");
 note(c2.consents.some((c) => /^dialog:/.test(c)), "accepting the credit asks for confirmation");
 
-// 5. Without the local-network permission, the page explains what to do.
+// 5. A case opened from a saved receipt has no claim: the assistant must not assume facts.
+const intake = watch(await context.newPage(), "intake");
+const sampleFile = await (await fetch(`${DESK}/samples/brackenlight-BL-2207.json`)).json();
+await intake.goto(`${DESK}/case.html`);
+await intake.waitForFunction(() => !!window.__nsweb?.engine, null, { timeout: 30000 });
+await intake.setInputFiles("#receipt-file", { name: "receipt.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(sampleFile.receipt)) });
+await intake.click('[data-action="check-terms"]');
+await intake.click('dialog.page-dialog button[value="allow"]');
+await intake.waitForSelector(".terms-status[data-kind='ok']");
+await turn(intake, "I want to return the lamp I bought.");
+const early = await intake.$(".verdict");
+note(!early || !/^Eligible/.test((await early.innerText()).trim()), "a bare request is not filed with facts the customer never stated");
+await turn(intake, "I changed my mind. It is unused and still in its original box.");
+note(/Eligible/.test(await intake.textContent(".verdict").catch(() => "")), "the stated facts are filed and the function computes the outcome");
+
+// 6. Without the local-network permission, the page explains what to do. Only a
+// public page is blocked from a server on this computer, so this runs on the
+// published sites only.
+if (!args.includes("--dev")) {
 const blocked = await makeContext({ grant: false });
 const bp = await blocked.newPage();
 await bp.goto(`${DESK}/case.html#sample=brackenlight-BL-2207`);
@@ -170,6 +195,7 @@ await bp.waitForFunction(() => /did not let this page reach/.test(document.query
 const hint = await bp.textContent("#assistant-status");
 note(/did not let this page reach the model server/.test(hint), `blocked local server: page hint shown ("${hint.slice(0, 90)}...")`);
 await blocked.close();
+}
 
 note(leaks.length === 0, `the key went only to ${ROUTER}${leaks.length ? `; leaks: ${leaks.join("; ")}` : ""}`);
 note(errors.length === 0, `no page errors${errors.length ? `: ${errors.slice(0, 5).join(" | ")}` : ""}`);

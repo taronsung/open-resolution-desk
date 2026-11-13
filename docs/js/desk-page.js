@@ -663,13 +663,18 @@ export class DeskPage {
       customer_account: story || null,
       shop_form_said: shopDecision ? `${shopDecision} (the shop's own form, using its current terms, not the desk's outcome)` : null,
     };
+    const { claim } = this.state;
+    if (claim) {
+      const facts = Object.entries(claim.facts || {}).map(([k, v]) => `${k.replace(/_/g, " ")}: ${v ? "yes" : "no"}`).join(", ");
+      data.claim = `${CLAIM_TYPES[claim.type] || claim.type} for ${claim.sku}, reported on ${claim.reported_on}${facts ? `, as stated by the customer: ${facts}` : ""}`;
+    }
     if (outcome) {
       Object.assign(data, {
         outcome: summarizeOutcome(outcome),
         refund_value: money(outcome.refund.total_cents, currency),
         return_shipping: outcome.return_shipping,
         checks: outcome.checks.map((c) => `${c.passed === true ? "met" : c.passed === false ? "NOT met" : "open"}: ${c.label}${c.detail ? ` (${c.detail})` : ""}${c.clause ? ` [${c.clause}]` : ""}`),
-        clauses_applied: Object.fromEntries(outcome.clauses.map((id) => [id, shop?.terms?.clauses?.[id] || ""])),
+        clauses_applied: outcome.clauses,
         notes: outcome.notes,
         fingerprint: shortHash(fingerprint),
         options_to_accept: [
@@ -733,9 +738,9 @@ export class DeskPage {
 
   nextStep() {
     const { status, shop, outcome } = this.state;
-    if (status === "draft") return "When the customer says what happened, call website_file_claim with the claim type and the facts they stated. It reads and checks the pinned terms first.";
+    if (status === "draft") return "No claim is filed. Ask for the claim type and the facts it needs, unless the customer has stated them. Then call website_file_claim with exactly what they stated. Never assume a fact.";
     if (status === "filed" && outcome?.decision === "incomplete") return `Ask for the missing facts (${outcome.missing.join(", ")}) and call website_file_claim again.`;
-    if (status === "filed") return "Explain the outcome if asked. If the visitor wants the shop's side, consult shop_representative. When the visitor chooses an option, record it with website_accept_option.";
+    if (status === "filed") return "Explain the outcome from the checks. For the text of a clause, call terms_analyst. If the visitor wants the shop's side, call shop_representative. When the visitor names an option, call website_accept_option.";
     if (status === "accepted") return "Waiting for the shop to confirm on its own site with the link on this page.";
     if (status === "confirmed") return "The shop confirmed. The case is settled.";
     if (status === "review_requested") return "A review by a person was requested.";

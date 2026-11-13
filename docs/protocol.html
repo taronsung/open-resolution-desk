@@ -78,7 +78,7 @@
     <table>
       <thead><tr><th scope="col">Specification</th><th scope="col">Here</th></tr></thead>
       <tbody>
-        <tr><td>Data-only networks and a manifest (sections 2 and 3.3)</td><td><a href="./agent-manifest.json">agent-manifest.json</a>, <a href="./desk_clerk.network.json">desk_clerk.network.json</a>, <a href="./agents/agent-manifest.json">agents/agent-manifest.json</a>. Built from HOCON with the runtime's own parser and validator.</td></tr>
+        <tr><td>Data-only networks and a manifest (sections 2 and 3.3)</td><td><a href="./agent-manifest.json">agent-manifest.json</a>, <a href="./desk_clerk.network.json">desk_clerk.network.json</a>, <a href="./agents/agent-manifest.json">agents/agent-manifest.json</a>. Built from HOCON with the runtime's own parser and validator. The desk's network has two agents: the case assistant and a terms analyst it calls for clause texts.</td></tr>
         <tr><td>Browser execution and site actions (3.1)</td><td>Five <code>website_*</code> actions: <code>get_case</code> and <code>check_terms</code> read, <code>file_claim</code> writes, <code>accept_option</code> and <code>request_review</code> are irreversible and confirmed by the page, not the model.</td></tr>
         <tr><td>Loading a peer site (3.2)</td><td>The shop's representative is a link slot bound at run time from the shop's own manifest. Shops load the desk's public guide by URL. Each contact with another origin asks first, the network name must match exactly, and the peer runs in your browser.</td></tr>
         <tr><td>Pluggable inference and BYOK (4)</td><td>Your key goes only to the model provider you choose. Peers inherit that provider and never see the key. The Across sites log shows every contact.</td></tr>
