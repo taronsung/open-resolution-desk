@@ -858,7 +858,7 @@ export class DeskPage {
     const currency = outcome.currency;
     const head = el("div", { class: "verdict", "data-decision": outcome.decision },
       el("p", { class: "verdict-word", text: DECISION_TEXT[outcome.decision] }),
-      el("p", { class: "verdict-line", text: summarizeOutcome(outcome) }));
+      el("p", { class: "verdict-line", text: summarizeOutcome(outcome).replace(/^[^:]+:\s*/, "") }));
     const checks = el("ol", { class: "checks" }, outcome.checks.map((c) =>
       el("li", { "data-passed": c.passed === true ? "yes" : c.passed === false ? "no" : "open" },
         el("span", { class: "mark", "aria-hidden": "true", text: c.passed === true ? "✓" : c.passed === false ? "✕" : "?" }),
@@ -887,8 +887,11 @@ export class DeskPage {
   }
 
   fingerprintBlock(fingerprint, matched) {
+    // Draw the mark in once, when a new fingerprint first appears.
+    const animate = !!fingerprint && this.drawnFingerprint !== fingerprint;
+    this.drawnFingerprint = fingerprint;
     return el("figure", { class: "fingerprint" },
-      fingerprintMark(fingerprint, { size: 132, matched }),
+      fingerprintMark(fingerprint, { size: 132, matched, animate }),
       el("figcaption", {},
         el("span", { class: "fp-title", text: "Outcome fingerprint" }),
         el("code", { class: "hash", title: fingerprint, text: shortHash(fingerprint) }),

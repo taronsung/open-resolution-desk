@@ -12,7 +12,9 @@
     "dev": "sh tools/dev.sh",
     "test": "node --test tests/protocol/",
     "test:e2e": "node tests/e2e/run.mjs",
-    "audit:a11y": "node tools/a11y_audit.mjs"
+    "test:e2e:prod": "node tests/e2e/run.mjs --prod",
+    "audit:a11y": "node tools/a11y_audit.mjs",
+    "audit:a11y:prod": "node tools/a11y_audit.mjs --prod"
   },
   "devDependencies": {
     "axe-core": "4.10.2",

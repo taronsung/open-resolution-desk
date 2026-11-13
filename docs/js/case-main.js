@@ -85,6 +85,7 @@ async function start() {
     { name: "ord_accept_option", description: "Record the customer's choice (\"outcome\" or a published offer id). The page asks the visitor to confirm.", inputSchema: { type: "object", properties: { option: { type: "string" } }, required: ["option"] }, annotations: { consequentialHint: true }, run: (args) => page.acceptOption(args, { via: "page" }) },
   ]).then((n) => { if (n) console.info(`WebMCP: ${n} desk tools registered`); });
   window.addEventListener("hashchange", () => page.openFromLocation());
+  document.documentElement.dataset.ready = "true";
   return page;
 }
 

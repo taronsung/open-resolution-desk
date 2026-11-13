@@ -11,7 +11,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
  * :param options: {size, matched} size in CSS pixels; matched adds the outer ring.
  * :return: An <svg> element with an accessible label.
  */
-export function fingerprintMark(hash, { size = 120, matched = false } = {}) {
+export function fingerprintMark(hash, { size = 120, matched = false, animate = false } = {}) {
   const hex = /^sha256:([0-9a-f]{64})$/.exec(String(hash || ""))?.[1];
   const svg = document.createElementNS(SVG_NS, "svg");
   svg.setAttribute("viewBox", "0 0 120 120");
@@ -19,6 +19,7 @@ export function fingerprintMark(hash, { size = 120, matched = false } = {}) {
   svg.setAttribute("height", String(size));
   svg.setAttribute("role", "img");
   svg.classList.add("fp-mark");
+  if (animate) svg.classList.add("fp-animate");
   if (!hex) {
     svg.setAttribute("aria-label", "No fingerprint yet");
     const empty = document.createElementNS(SVG_NS, "circle");
@@ -55,6 +56,7 @@ export function fingerprintMark(hash, { size = 120, matched = false } = {}) {
     const inner = 34;
     const outer = inner + 5 + value * 1.25;
     const line = document.createElementNS(SVG_NS, "line");
+    line.style.setProperty("--i", String(i));
     line.setAttribute("x1", (60 + inner * Math.cos(angle)).toFixed(2));
     line.setAttribute("y1", (60 + inner * Math.sin(angle)).toFixed(2));
     line.setAttribute("x2", (60 + outer * Math.cos(angle)).toFixed(2));

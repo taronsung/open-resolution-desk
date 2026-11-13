@@ -3,6 +3,7 @@
 import { ready } from "./js/shop-main.js";
 import { SHOP } from "./data/shop-data.js";
 import { Shop } from "./js/shop-page.js";
+import { watchRouterErrors } from "./js/router-hint.js";
 
 /** The runtime's agent panels are <aside> elements inside this page's main
  * landmark. Remove their landmark role so screen readers do not list nested landmarks; their headings stay. */
@@ -48,6 +49,7 @@ async function start() {
         if (target.textContent === "Planning your trip…") target.textContent = "Working on it…";
       }).observe(target, { childList: true, characterData: true, subtree: true });
     }
+    watchRouterErrors(booted.trace, status);
     window.__shopTrace = booted.trace;
     return engine;
   } catch (error) {

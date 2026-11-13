@@ -160,7 +160,22 @@ function renderOrder(page) {
 async function start() {
   const page = new ShopPage();
   Shop.page = page;
-  await page.loadTerms();
+  // The order lookup works from the first click: it waits for the terms files
+  // instead of ignoring a click that comes before they arrive.
+  const termsLoaded = page.loadTerms();
+  const lookup = document.querySelector("#lookup-form");
+  lookup.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const data = new FormData(lookup);
+    await termsLoaded;
+    showError(lookup, page.lookUpOrder({ order_id: data.get("order_id"), email: data.get("email") }));
+  });
+  document.querySelectorAll("[data-fill-sample]").forEach((button) => button.addEventListener("click", () => {
+    lookup.querySelector('[name="order_id"]').value = button.dataset.order;
+    lookup.querySelector('[name="email"]').value = button.dataset.email;
+    lookup.requestSubmit();
+  }));
+  await termsLoaded;
   renderProducts(page);
   const render = () => { renderCart(page); renderOrder(page); };
   page.onChange(render);
@@ -177,23 +192,13 @@ async function start() {
       document.querySelector("#orders").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     }
   });
-  const lookup = document.querySelector("#lookup-form");
-  lookup.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const data = new FormData(lookup);
-    showError(lookup, page.lookUpOrder({ order_id: data.get("order_id"), email: data.get("email") }));
-  });
   exposeWebMcpTools([
     { name: "shop_get_info", description: `Read ${SHOP.name}'s catalog, prices and today's returns terms.`, inputSchema: { type: "object", properties: {} }, annotations: { readOnlyHint: true }, run: () => page.getShopInfo() },
     { name: "shop_look_up_order", description: "Show an order when the order number and email match.", inputSchema: { type: "object", properties: { order_id: { type: "string" }, email: { type: "string" } }, required: ["order_id", "email"] }, run: (args) => page.lookUpOrder(args) },
     { name: "shop_start_return", description: "Run the shop's returns check for one item. It uses today's returns terms.", inputSchema: { type: "object", properties: { order_id: { type: "string" }, email: { type: "string" }, type: { type: "string", enum: Object.keys(CLAIM_TYPES) }, sku: { type: "string" }, unused: { type: "boolean" }, original_packaging: { type: "boolean" }, photo_evidence: { type: "boolean" }, received: { type: "boolean" } }, required: ["order_id", "email", "type"] }, run: (args) => page.startReturn(args) },
     { name: "shop_prepare_desk_handoff", description: "Make the link that opens this order's case at the Open Resolution Desk. Sends nothing.", inputSchema: { type: "object", properties: { order_id: { type: "string" }, email: { type: "string" }, story: { type: "string" } }, required: ["order_id", "email"] }, run: (args) => page.prepareDeskHandoff(args) },
   ]).then((n) => { if (n) console.info(`WebMCP: ${n} shop tools registered`); });
-  document.querySelectorAll("[data-fill-sample]").forEach((button) => button.addEventListener("click", () => {
-    lookup.querySelector('[name="order_id"]').value = button.dataset.order;
-    lookup.querySelector('[name="email"]').value = button.dataset.email;
-    lookup.requestSubmit();
-  }));
+  document.documentElement.dataset.ready = "true";
   return page;
 }
 

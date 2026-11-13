@@ -7,6 +7,7 @@
 import { ready } from "./js/case-main.js";
 import { Desk } from "./js/desk-page.js";
 import { reviewDialog } from "./js/dialogs.js";
+import { watchRouterErrors } from "./js/router-hint.js";
 
 const GREETING = "I can walk you through this case: read the shop's terms that applied on the day you bought, compute the outcome with the published rules, ask the shop's own agent for its side, and record what you choose. Your messages go only to the model provider you set below.";
 const LINK_SLOT = "shop_representative";
@@ -37,6 +38,7 @@ class AssistantMount {
       AssistantMount.addPrivateContext(engine);
       AssistantMount.addCaseState(engine);
       AssistantMount.watchTrace(booted.trace, page);
+      watchRouterErrors(booted.trace, status);
       AssistantMount.relabelStatus();
       tidyLandmarks();
       page.onShopResolved = (shop) => AssistantMount.bindShop(engine, shop, page);

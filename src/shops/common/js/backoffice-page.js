@@ -183,7 +183,9 @@ export class BackOffice {
         el("span", { class: "check-detail", text: c.detail }))));
     const fp = result.recomputed?.fingerprint || result.outcomeEvent?.data?.fingerprint;
     const matched = !!result.recomputed && result.recomputed.fingerprint === result.outcomeEvent?.data?.fingerprint;
-    const figure = el("figure", { class: "fingerprint" }, fingerprintMark(fp, { size: 132, matched }),
+    const animate = this.drawnFingerprint !== fp;
+    this.drawnFingerprint = fp;
+    const figure = el("figure", { class: "fingerprint" }, fingerprintMark(fp, { size: 132, matched, animate }),
       el("figcaption", {}, el("span", { class: "fp-title", text: matched ? "Same fingerprint as the desk" : "Fingerprint" }),
         el("code", { class: "hash", title: fp || "", text: shortHash(fp) })));
     const actions = el("div", { class: "bo-actions" });

@@ -1,27 +1,40 @@
-// End-to-end checks in a real browser, without a language model. Builds the dev
-// sites, serves them on two origins like GitHub Pages, and walks a case from the
-// sample to the shop's confirmation, then the error states and the verify page.
-// Usage: npm run test:e2e   (needs Python 3 and Playwright's Chromium)
+// End-to-end checks in a real browser, without a language model. Walks a case
+// from the sample to the shop's confirmation, then the error states, the verify
+// page and a phone-width run.
+// Usage:
+//   npm run test:e2e        builds the dev sites and serves them on two local
+//                           origins like GitHub Pages (needs Python 3)
+//   npm run test:e2e:prod   runs the same checks against the published sites
+//                           named in config.json (prod), without building
+// Both need Playwright's Chromium.
 import { spawn, execFileSync } from "node:child_process";
 import assert from "node:assert/strict";
-import { mkdir } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { chromium } from "playwright";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const out = path.join(root, "tests/e2e/output");
+const target = process.argv.includes("--prod") ? "prod" : "dev";
+const config = JSON.parse(await readFile(path.join(root, "config.json"), "utf8"))[target];
+const DESK = config.desk;
+const BRACKENLIGHT = config.shops.brackenlight;
+const SHOPS_ORIGIN = new URL(config.shops_root).origin;
+const out = path.join(root, "tests/e2e/output", target);
 await mkdir(out, { recursive: true });
-execFileSync("node", ["tools/build_sites.mjs", "dev"], { cwd: root, stdio: "inherit" });
-const servers = [
-  spawn("python3", ["tools/serve.py", "dist/dev/desk", "8090", "--prefix", "/open-resolution-desk"], { cwd: root, stdio: "ignore" }),
-  spawn("python3", ["tools/serve.py", "dist/dev/shops", "8091"], { cwd: root, stdio: "ignore" }),
-];
-const DESK = "http://127.0.0.1:8090/open-resolution-desk";
+const servers = [];
+if (target === "dev") {
+  execFileSync("node", ["tools/build_sites.mjs", "dev"], { cwd: root, stdio: "inherit" });
+  servers.push(
+    spawn("python3", ["tools/serve.py", "dist/dev/desk", "8090", "--prefix", "/open-resolution-desk"], { cwd: root, stdio: "ignore" }),
+    spawn("python3", ["tools/serve.py", "dist/dev/shops", "8091"], { cwd: root, stdio: "ignore" }),
+  );
+}
 for (let i = 0; i < 40; i++) {
-  try { if ((await fetch(`${DESK}/case.html`)).ok && (await fetch("http://127.0.0.1:8091/brackenlight/")).ok) break; } catch { /* starting */ }
+  try { if ((await fetch(`${DESK}/case.html`)).ok && (await fetch(`${BRACKENLIGHT}/`)).ok) break; } catch { /* starting */ }
   await new Promise((r) => setTimeout(r, 250));
 }
+console.log(`Target: ${target} (desk ${DESK}, shops ${config.shops_root})`);
 
 const browser = await chromium.launch();
 const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
@@ -44,7 +57,7 @@ await check("sample case settles across two origins", async () => {
   await page.click('.choices button[data-option="outcome"]');
   await page.click("dialog.page-dialog .btn.primary");
   const link = await page.getAttribute('a.btn.primary[target="_blank"]', "href");
-  assert.match(link, /^http:\/\/127\.0\.0\.1:8091\/brackenlight\/backoffice\.html#case=/);
+  assert.ok(link.startsWith(`${BRACKENLIGHT}/backoffice.html#case=`), link);
   await page.goto(link);
   await page.waitForSelector("#bo-case .checks");
   const passed = await page.$$eval("#bo-case .checks li", (els) => els.map((e) => e.dataset.passed));
@@ -90,7 +103,7 @@ await check("the verify page recomputes a settled case", async () => {
 await check("a declined contact sends nothing and says so", async () => {
   const page = watch(await context.newPage());
   const requests = [];
-  page.on("request", (r) => { if (r.url().includes(":8091")) requests.push(r.url()); });
+  page.on("request", (r) => { if (r.url().startsWith(SHOPS_ORIGIN)) requests.push(r.url()); });
   await page.goto(`${DESK}/case.html#sample=brackenlight-BL-2207`);
   await page.click('[data-action="check-terms"]');
   await page.click('dialog.page-dialog button[value="decline"]');
@@ -145,7 +158,7 @@ await check("a damaged link explains itself", async () => {
 
 await check("the shop's own returns form refuses under today's terms and offers the desk", async () => {
   const page = watch(await context.newPage());
-  await page.goto("http://127.0.0.1:8091/brackenlight/#orders");
+  await page.goto(`${BRACKENLIGHT}/#orders`);
   await page.click("[data-fill-sample]");
   await page.waitForSelector("#return-form");
   await page.check('#return-form input[name="unused"][value="yes"]');
@@ -161,6 +174,50 @@ await check("the shop's own returns form refuses under today's terms and offers 
   await page.waitForSelector(".verdict");
   assert.match(await page.textContent(".verdict"), /Eligible/);
   await page.close();
+});
+
+await check("the agent runtime boots each published network without a key", async () => {
+  const pages = [[`${DESK}/case.html`, "desk_clerk"], [`${BRACKENLIGHT}/`, "brackenlight_assistant"], [`${config.shops.coppice}/`, "coppice_assistant"]];
+  for (const [url, network] of pages) {
+    const page = watch(await context.newPage());
+    await page.goto(url);
+    await page.waitForFunction(() => !!window.__nsweb?.engine?.top?.network, null, { timeout: 30000 });
+    const name = await page.evaluate(() => window.__nsweb.engine.top.network.name);
+    assert.equal(name, network, url);
+    assert.ok(await page.$("#ns-input"), `no chat input on ${url}`);
+    await page.close();
+  }
+});
+
+await check("phone width: the sample case settles at 390 px without sideways scrolling", async () => {
+  const phone = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
+  const page = watch(await phone.newPage());
+  const overflow = async (where) => {
+    const extra = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    assert.ok(extra <= 0, `${where}: ${extra}px of sideways scrolling`);
+  };
+  await page.goto(`${DESK}/`);
+  await overflow("desk front page");
+  await page.goto(`${DESK}/case.html#sample=brackenlight-BL-2207`);
+  await page.tap('[data-action="check-terms"]');
+  await page.tap('dialog.page-dialog button[value="allow"]');
+  await page.waitForSelector(".verdict");
+  await overflow("outcome");
+  await page.tap('.choices button[data-option="outcome"]');
+  await page.tap("dialog.page-dialog .btn.primary");
+  const link = await page.getAttribute('a.btn.primary[target="_blank"]', "href");
+  await overflow("agreement");
+  await page.goto(link);
+  await page.waitForSelector("#bo-case .checks");
+  await overflow("shop back office");
+  await page.tap("#bo-case .bo-actions .btn.primary");
+  await page.tap("dialog.page-dialog .btn.primary");
+  const back = await page.getAttribute("#bo-case a.btn.primary", "href");
+  await page.goto(back);
+  await page.waitForSelector(".settled");
+  await overflow("settled case");
+  await page.screenshot({ path: path.join(out, "settled-phone.png"), fullPage: true });
+  await phone.close();
 });
 
 await check("no page errors", async () => { assert.deepEqual(pageErrors, []); });

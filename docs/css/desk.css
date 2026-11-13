@@ -39,6 +39,8 @@ h1 { font-size: clamp(2.2rem, 5.2vw, 3.9rem); letter-spacing: -0.02em; font-weig
 h2 { font-size: clamp(1.45rem, 2.6vw, 1.95rem); letter-spacing: -0.01em; }
 h3 { font-size: 1.125rem; }
 code, .hash { font-family: var(--mono); font-size: 0.9em; }
+/* Addresses and hashes in running text wrap instead of pushing the page sideways on a phone. */
+p code, li code, dd code, figcaption code { overflow-wrap: anywhere; }
 .hash { background: var(--carbon-soft); color: var(--carbon-deep); padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
 .small { font-size: 0.875rem; }
 .muted { color: var(--muted); }
@@ -218,6 +220,13 @@ table.amounts tr.total th, table.amounts tr.total td { font-weight: 750; border-
 .fp-mark .fp-ticks line { stroke: var(--carbon); stroke-width: 2.2; stroke-linecap: round; }
 .fp-mark .fp-ring { fill: none; stroke: var(--pine); stroke-width: 3; }
 .fp-mark .fp-text { font: 650 13px var(--mono); fill: var(--carbon-deep); }
+/* The one moment of motion: a new fingerprint draws itself in, then the match ring closes. */
+.fp-animate .fp-ticks line { stroke-dasharray: 32; stroke-dashoffset: 32; animation: fp-draw 420ms ease-out forwards; animation-delay: calc(var(--i) * 9ms); }
+.fp-animate .fp-ring { stroke-dasharray: 365; stroke-dashoffset: 365; animation: fp-draw 700ms ease-in-out 700ms forwards; }
+@keyframes fp-draw { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .fp-animate .fp-ticks line, .fp-animate .fp-ring { animation: none; stroke-dashoffset: 0; }
+}
 .fp-mark .fp-empty { fill: none; stroke: var(--rule); stroke-dasharray: 3 4; }
 
 .offers, .choices { list-style: none; padding: 0; margin: 10px 0; display: grid; gap: 10px; }
@@ -243,7 +252,7 @@ table.amounts tr.total th, table.amounts tr.total td { font-weight: 750; border-
 #contact-log li[data-kind="router"] .host { color: var(--pine); }
 
 /* Assistant column */
-.assistant { position: sticky; top: 16px; }
+.assistant { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; overscroll-behavior: contain; padding-right: 4px; }
 .assistant h2 { font-size: 1.125rem; margin-bottom: 4px; }
 .assistant > p { font-size: 0.875rem; color: var(--muted); }
 #agent-app {
@@ -298,7 +307,7 @@ body > dialog h2 { margin: 0 0 12px; }
 
 @media (max-width: 1020px) {
   .case-layout { grid-template-columns: 1fr; }
-  .assistant { position: static; }
+  .assistant { position: static; max-height: none; overflow: visible; padding-right: 0; }
   .hero { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {

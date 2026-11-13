@@ -96,6 +96,7 @@ table.cart input { width: 72px; }
 .facts dd { margin: 0; }
 .facts ul { margin: 0; padding-left: 18px; }
 .hash { font-family: var(--font-mono); font-size: 0.875em; background: var(--hash-bg); padding: 1px 5px; border-radius: 4px; }
+p code, li code, dd code, figcaption code { overflow-wrap: anywhere; }
 .return-form { display: grid; gap: 12px; }
 .facts-box { display: grid; gap: 8px; }
 .fact { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
@@ -157,6 +158,13 @@ dl.clauses dd { margin: 0; max-width: 68ch; }
 .fp-mark .fp-ticks line { stroke: var(--fp-ink); stroke-width: 2.2; stroke-linecap: round; }
 .fp-mark .fp-ring { fill: none; stroke: var(--ok); stroke-width: 3; }
 .fp-mark .fp-text { font: 600 13px var(--font-mono); fill: var(--fp-ink); }
+/* The one moment of motion: a new fingerprint draws itself in, then the match ring closes. */
+.fp-animate .fp-ticks line { stroke-dasharray: 32; stroke-dashoffset: 32; animation: fp-draw 420ms ease-out forwards; animation-delay: calc(var(--i) * 9ms); }
+.fp-animate .fp-ring { stroke-dasharray: 365; stroke-dashoffset: 365; animation: fp-draw 700ms ease-in-out 700ms forwards; }
+@keyframes fp-draw { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .fp-animate .fp-ticks line, .fp-animate .fp-ring { animation: none; stroke-dashoffset: 0; }
+}
 .fp-mark .fp-empty { fill: none; stroke: var(--line-strong); stroke-dasharray: 3 4; }
 
 .shop-footer { padding: 24px clamp(16px, 4vw, 48px) 40px; border-top: 1px solid var(--line); color: var(--muted); }

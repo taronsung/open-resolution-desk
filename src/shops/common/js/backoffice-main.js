@@ -2,7 +2,7 @@
 import { BackOffice } from "./backoffice-page.js";
 
 const office = new BackOffice(document.querySelector("#bo-root"));
-office.start().catch((error) => {
+office.start().then(() => { document.documentElement.dataset.ready = "true"; }).catch((error) => {
   document.querySelector("#bo-case").textContent = `The case page could not start: ${error.message}`;
   console.error(error);
 });

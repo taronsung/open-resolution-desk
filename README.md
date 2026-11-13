@@ -83,7 +83,7 @@ tools. The page still asks before each contact and each irreversible step.
 | `src/common` | Shared UI: fingerprint mark, dialogs, WebMCP, fonts |
 | `protocol/v1` | The ord/1 protocol: canonical JSON, the decision function, case files |
 | `tests` | Protocol unit tests and browser end-to-end tests |
-| `tools` | Build script, a local server that sends GitHub Pages headers, accessibility audit, art generator |
+| `tools` | Build script, a site conformance checker, a local server that sends GitHub Pages headers, accessibility audit, art generator |
 | `vendor/agentic-web` | The browser runtime and network builder from the agentic-web repository, unchanged |
 | `docs` | The built desk, served by GitHub Pages |
 
@@ -93,12 +93,33 @@ Node.js 22 or newer and Python 3.
 
 ```sh
 npm install
-npm test               # protocol unit tests
-npm run dev            # build and serve the desk on :8090 and the shops on :8091
-npm run test:e2e       # browser checks without a model
-npm run audit:a11y     # axe-core, WCAG 2.1 AA, desktop and phone widths
-npm run publish:prod   # build for GitHub Pages into docs/ and the shops repository
+npm test                 # protocol unit tests
+npm run dev              # build and serve the desk on :8090 and the shops on :8091
+npm run test:e2e         # browser checks without a model, on the local build
+npm run test:e2e:prod    # the same checks against the published sites
+npm run audit:a11y       # axe-core, WCAG 2.1 AA, desktop and phone widths
+npm run audit:a11y:prod  # the same audit against the published sites
+npm run publish:prod     # build for GitHub Pages into docs/ and the shops repository
 ```
+
+## Checking any agentic site
+
+`tools/check_agentic_site.mjs` checks the public files of any open agentic
+website against MVP Profile 0.2, the way a browser on another origin reads
+them: the manifest, each network definition it names, `links.json`, CORS and
+HTTPS, and the peer networks those files point to. It parses and validates each
+network with the runtime's own `hocon.js` and `kernel.js`. It checks published
+files only, not runtime behaviour.
+
+```sh
+node tools/check_agentic_site.mjs https://taronsung.github.io/open-resolution-desk/
+node tools/check_agentic_site.mjs https://ord-demo-shops.github.io/brackenlight/agents/brackenlight_claims
+node tools/check_agentic_site.mjs <url> --runtime <agentic-web>/skills/agentify-website/runtime --json
+```
+
+A URL that ends in a network name is treated as a peer-network reference
+(section 3.2): the tool reads the manifest one level up and requires an entry
+with exactly that name. The exit code is 1 when a check fails.
 
 For a local model, LM Studio works: `lms server start --port 1234 --cors`, load
 `qwen/qwen3-30b-a3b-2507`, then use router `http://127.0.0.1:1234/v1` with any
