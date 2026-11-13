@@ -401,7 +401,7 @@ export class DeskPage {
       case_id: this.state.caseFile.case_id,
       choice: `${choice.label}: ${money(choice.value_cents, this.state.outcome.currency)}`,
       next: link
-        ? `The page shows a link for ${this.state.shop.name}. The shop opens it on its own site, checks the fingerprint and confirms.`
+        ? `The choice is recorded. The page shows a link for ${this.state.shop.name}. Tell the customer to send it to the shop: the shop opens it on its own site, checks the fingerprint and confirms. The case is settled only when the shop confirms, so do not call it final yet.`
         : "The shop publishes no case page, so send it the case file from Download record.",
       via,
     };
