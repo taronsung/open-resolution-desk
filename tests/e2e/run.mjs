@@ -148,6 +148,24 @@ await check("a receipt whose pinned hash does not match stops the case", async (
   await page.close();
 });
 
+await check("a shop that changes an old terms file cannot escape it: a saved copy with the pinned hash works", async () => {
+  const page = watch(await context.newPage());
+  const original = await (await fetch(`${BRACKENLIGHT}/terms/v2.json`)).text();
+  const altered = JSON.parse(original);
+  altered.rules.change_of_mind.window_days = 14;
+  await page.route(`${BRACKENLIGHT}/terms/v2.json`, (route) => route.fulfill({ status: 200, contentType: "application/json", headers: { "access-control-allow-origin": "*" }, body: JSON.stringify(altered) }));
+  await page.goto(`${DESK}/case.html#sample=brackenlight-BL-2207`);
+  await page.click('[data-action="check-terms"]');
+  await page.click('dialog.page-dialog button[value="allow"]');
+  await page.waitForSelector(".terms-status[data-kind='error']");
+  assert.equal(await page.$(".verdict"), null);
+  await page.setInputFiles("#terms-copy", { name: "v2.json", mimeType: "application/json", buffer: Buffer.from(original) });
+  await page.waitForSelector(".verdict");
+  assert.match(await page.textContent(".verdict"), /Eligible.*\$79\.00/);
+  assert.match(await page.textContent(".terms-status"), /Your copy of version 2 matches the hash on the receipt/);
+  await page.close();
+});
+
 await check("an edited case file is refused at the shop", async () => {
   const page = watch(await context.newPage());
   await page.goto(`${DESK}/case.html#sample=brackenlight-BL-2207`);

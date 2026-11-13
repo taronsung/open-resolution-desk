@@ -44,7 +44,8 @@ for (const [label, viewport] of [["desktop", { width: 1360, height: 900 }], ["ph
     await page.close();
   }
   // The states a case passes through: the consent dialog, the outcome, the
-  // confirmation dialog, the agreement, the shop's case page and the settled case.
+  // confirmation dialog, the agreement, the shop's case page, the settled case,
+  // and the error when the shop's terms file does not match the receipt.
   const page = await context.newPage();
   await page.goto(`${DESK}/case.html#sample=brackenlight-BL-2207`);
   await page.click('[data-action="check-terms"]');
@@ -70,6 +71,14 @@ for (const [label, viewport] of [["desktop", { width: 1360, height: 900 }], ["ph
   await page.goto(back);
   await page.waitForSelector(".settled");
   await audit(page, label, "case: settled");
+  // The error state when the shop's file no longer matches the receipt's hash.
+  const original = await (await fetch(`${SHOPS}/brackenlight/terms/v2.json`)).json();
+  await page.route(`${SHOPS}/brackenlight/terms/v2.json`, (route) => route.fulfill({ status: 200, contentType: "application/json", headers: { "access-control-allow-origin": "*" }, body: JSON.stringify({ ...original, title: "Changed after the fact" }) }));
+  await page.goto(`${DESK}/case.html#sample=brackenlight-BL-2207`);
+  await page.click('[data-action="check-terms"]');
+  await page.click('dialog.page-dialog button[value="allow"]');
+  await page.waitForSelector(".terms-status[data-kind='error']");
+  await audit(page, label, "case: terms do not match the receipt");
   await page.close();
   await context.close();
 }

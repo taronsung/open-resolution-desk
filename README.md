@@ -17,7 +17,9 @@ is not a court, a public body or a dispute resolution entity.
    SHA-256 fingerprint.
 2. When the customer and the shop disagree, the shop hands the case to the desk
    with a link. With the visitor's consent, the desk reads the pinned version
-   from the shop's own site and checks the fingerprint.
+   from the shop's own site and checks the fingerprint. If the shop's file no
+   longer matches, a copy the customer saved works, as long as its hash
+   matches the receipt.
 3. A published decision function computes the outcome from the terms, the
    receipt and the claim. No language model decides it.
 4. The desk's assistant explains the outcome. When asked, it loads the shop's

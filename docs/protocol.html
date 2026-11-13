@@ -63,6 +63,8 @@
       </tbody>
     </table>
 
+    <p>A terms version is identified by its hash, not by its address. If the shop's site no longer provides a file with the hash on the receipt, because the shop changed or removed it, the customer can give the desk a copy saved earlier. The desk uses the copy if its hash matches the receipt. The shop's own case page still compares the case with the shop's archive, so a mismatch there goes to review by a person.</p>
+
     <h2 id="outcome">The outcome and its fingerprint</h2>
     <p>The decision function <a href="./protocol/v1/evaluate.js"><code>evaluate.js</code></a> takes the pinned terms, the receipt and the claim. It reads no clock, no network and no storage. It returns a decision (<code>eligible</code>, <code>not_eligible</code>, <code>needs_review</code> or <code>incomplete</code>), the remedy, the refund value in cents, who pays return shipping, and every check with its clause.</p>
     <p>The fingerprint is the SHA-256 of the canonical JSON of the engine (name, version and source hash), the terms hash, the receipt hash, the claim and the outcome. Canonical JSON sorts object keys and allows integers only. Two parties with the same inputs get the same fingerprint.</p>

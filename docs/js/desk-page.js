@@ -320,6 +320,54 @@ export class DeskPage {
   }
 
   /**
+   * Use a copy of the pinned terms that the customer saved, when the shop's site
+   * does not provide a file with the hash the receipt pins. Any copy works if its
+   * hash matches the receipt, so a shop cannot escape a version by changing or
+   * removing it. Nothing is sent anywhere.
+   *
+   * :param text: The terms JSON text.
+   * :param options: {via}
+   * :return: A summary of the terms check, or a refusal.
+   */
+  async useTermsCopy(text, { via = "page" } = {}) {
+    const { receipt } = this.state;
+    if (!receipt) return refuse("Open a case first: there is no receipt yet.");
+    let terms;
+    try { terms = JSON.parse(text); } catch { return refuse("This file is not a terms document: it is not JSON."); }
+    if (terms?.protocol !== "ord-terms/1") return refuse("This file is not an ord/1 terms document.");
+    const termsSha256 = await hashOf(terms);
+    if (termsSha256 !== receipt.terms.sha256) {
+      return refuse(`This copy does not match the hash on your receipt for version ${receipt.terms.version}, so the desk cannot use it.`);
+    }
+    const before = this.state.shop || {};
+    const why = before.verifyNote ? ` The shop's site did not provide it. ${before.verifyNote}` : "";
+    this.state.shop = {
+      ...before,
+      site: before.site || String(receipt.merchant.site || "").replace(/\/$/, ""),
+      host: before.host || (() => { try { return new URL(receipt.merchant.site).host; } catch { return ""; } })(),
+      name: before.name || receipt.merchant.name,
+      terms,
+      termsSha256,
+      termsUrl: null,
+      termsSource: "copy",
+      verified: true,
+      verifyNote: `Your copy of version ${terms.version} matches the hash on the receipt.${why}`,
+      currentVersion: before.currentVersion || "",
+      offers: before.offers || [],
+      representative: before.representative || null,
+      casePage: before.casePage || null,
+    };
+    this.changed();
+    const handoffClaim = this.state.handoffClaim;
+    if (handoffClaim && !this.state.outcome) {
+      const input = { type: handoffClaim.type, sku: handoffClaim.sku, quantity: handoffClaim.quantity, ...handoffClaim.facts };
+      const filed = await this.fileClaim(input, { via: `${via} (claim from the shop's returns form)` });
+      return { ...this.termsSummary(), recomputed_claim_from_shop_form: filed.ok ? filed.outcome : filed.reason };
+    }
+    return this.termsSummary();
+  }
+
+  /**
    * File (or amend) the claim and compute the outcome with the published decision
    * function. The model never chooses the outcome.
    *
@@ -777,14 +825,29 @@ export class DeskPage {
       status.dataset.kind = "ok";
       status.append(
         el("p", {}, el("strong", { text: `Version ${shop.terms.version} checked. ` }), shop.verifyNote),
-        el("p", { class: "small" }, `Read from ${shop.host}: `, el("a", { href: shop.termsUrl, text: shop.termsUrl.replace(/^https?:\/\//, "") })),
+        shop.termsSource === "copy"
+          ? el("p", { class: "small", text: "Read from the copy you provided." })
+          : el("p", { class: "small" }, `Read from ${shop.host}: `, el("a", { href: shop.termsUrl, text: shop.termsUrl.replace(/^https?:\/\//, "") })),
       );
-      if (String(shop.currentVersion) !== String(shop.terms.version)) {
+      if (shop.currentVersion && String(shop.currentVersion) !== String(shop.terms.version)) {
         status.append(el("p", { class: "callout" }, `The shop's current terms are version ${shop.currentVersion}. Your case uses version ${shop.terms.version}, the version your receipt pins from the day you bought.`));
       }
     } else if (shop?.verified === false) {
       status.dataset.kind = "error";
-      status.append(el("p", { text: shop.verifyNote }));
+      const copy = el("input", { type: "file", id: "terms-copy", accept: "application/json,.json" });
+      copy.addEventListener("change", async () => {
+        const file = copy.files?.[0];
+        if (!file) return;
+        const result = await this.useTermsCopy(await file.text());
+        if (!result.ok) this.flash(result.reason, "error");
+        copy.value = "";
+      });
+      status.append(
+        el("p", { text: shop.verifyNote }),
+        el("p", { class: "small", text: `A copy of version ${receipt.terms.version} that you saved also works, if its hash matches the receipt. Nothing is sent.` }),
+        el("label", { for: "terms-copy", text: `Use your copy of version ${receipt.terms.version} (.json)` }),
+        copy,
+      );
     } else {
       status.append(
         el("p", { text: "The desk has not read the shop's terms yet. It reads two public files from the shop's site and sends nothing about you." }),
