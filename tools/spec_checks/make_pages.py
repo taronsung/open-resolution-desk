@@ -115,7 +115,7 @@ def check_page(kind, c):
 HUB_ROWS = [
     ("Publish a two-agent HOCON network and a manifest from an ordinary HTTPS web host.",
      'The desk\'s <a href="../desk_clerk.network.json">case network</a> has two agents, a case assistant and a terms analyst (<a href="../desk_clerk.hocon">HOCON source</a>, <a href="../agent-manifest.json">manifest</a>), on GitHub Pages.'),
-    ("Load and run that network in a browser with the site's published default router and model; if BYOK is offered, also demonstrate the user-selected path.",
+    ("Load and run that network in a browser with the site's published default router and model, and, if BYOK is offered, the user-selected path.",
      "The checks on this page run with the router their manifests publish (the runtime's mock), with no key. The desk and the shops offer BYOK under each chat, tested with a local model."),
     ("Call an internal agent and at least one grounded capability through MCP or a registered local site action.",
      'On the <a href="../case.html#sample=brackenlight-BL-2207">case page</a>, ask what a clause says: the case assistant calls the terms analyst, which reads the case through a site action. The Developer view shows the call.'),
