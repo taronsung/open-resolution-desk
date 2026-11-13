@@ -25,9 +25,9 @@
     {
       "order_id": "BL-2207",
       "customer": { "name": "Mina Park", "email": "mina.park@example.com" },
-      "placed_on": "2026-09-21",
-      "dispatched_on": "2026-09-22",
-      "delivered_on": "2026-09-25",
+      "placed_on": "2026-10-08",
+      "dispatched_on": "2026-10-09",
+      "delivered_on": "2026-10-12",
       "items": [ { "sku": "lamp-ash-glaze", "name": "Ash Glaze Table Lamp", "unit_price_cents": 7900, "quantity": 1, "tags": [] } ],
       "delivery_charge_cents": 650,
       "terms_version": "2"

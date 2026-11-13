@@ -12,9 +12,9 @@
       "name": "Mina Park",
       "email": "mina.park@example.com"
     },
-    "placed_on": "2026-09-21",
-    "dispatched_on": "2026-09-22",
-    "delivered_on": "2026-09-25",
+    "placed_on": "2026-10-08",
+    "dispatched_on": "2026-10-09",
+    "delivered_on": "2026-10-12",
     "items": [
       {
         "sku": "lamp-ash-glaze",
@@ -32,7 +32,7 @@
       "sha256": "sha256:9653fd7a3af2587f86b3c803a5535a18e31a8038778ca083b6409e14c6c16a58"
     }
   },
-  "story": "I bought the Ash Glaze lamp in September. The shade colour does not suit my room. It is unused and still in its box. The shop's assistant says I am past the 30-day window.",
+  "story": "I bought the Ash Glaze lamp in early October, before the terms changed. The shade colour does not suit my room. It is unused and still in its box. The shop's assistant says I am past the 30-day window.",
   "shop_decision": "Not eligible: \"Reported within 30 days of delivery\" is not met, clause 2.1 (our returns terms, version 3)",
   "claim": {
     "type": "change_of_mind",

@@ -265,7 +265,7 @@ buildNetwork(path.join(deskOut, "agents/desk_preview.hocon"), path.join(deskOut,
 
 // Sample handoffs: the same packages a shop's handoff link carries.
 const samples = [
-  { shop: "brackenlight", order: "BL-2207", claim: { type: "change_of_mind", sku: "lamp-ash-glaze", facts: { unused: true, original_packaging: true } }, story: "I bought the Ash Glaze lamp in September. The shade colour does not suit my room. It is unused and still in its box. The shop's assistant says I am past the 30-day window.", decision: "Not eligible: \"Reported within 30 days of delivery\" is not met, clause 2.1 (our returns terms, version 3)" },
+  { shop: "brackenlight", order: "BL-2207", claim: { type: "change_of_mind", sku: "lamp-ash-glaze", facts: { unused: true, original_packaging: true } }, story: "I bought the Ash Glaze lamp in early October, before the terms changed. The shade colour does not suit my room. It is unused and still in its box. The shop's assistant says I am past the 30-day window.", decision: "Not eligible: \"Reported within 30 days of delivery\" is not met, clause 2.1 (our returns terms, version 3)" },
   { shop: "coppice", order: "CC-5531", claim: { type: "change_of_mind", sku: "wheelset-custom", facts: { unused: true, original_packaging: true } }, story: "I ordered a custom wheelset and changed my mind before riding it. It is unused and in the box. I would like a refund.", decision: "Not eligible: \"The item is not excluded (made-to-order items)\" is not met, clause 4.1 (our returns terms, version 1)" },
 ];
 for (const s of samples) {
