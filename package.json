@@ -13,6 +13,7 @@
     "test": "node --test tests/protocol/",
     "test:e2e": "node tests/e2e/run.mjs",
     "test:e2e:prod": "node tests/e2e/run.mjs --prod",
+    "test:model": "node tests/e2e/with-model.mjs",
     "audit:a11y": "node tools/a11y_audit.mjs",
     "audit:a11y:prod": "node tools/a11y_audit.mjs --prod"
   },

@@ -97,6 +97,7 @@ npm test                 # protocol unit tests
 npm run dev              # build and serve the desk on :8090 and the shops on :8091
 npm run test:e2e         # browser checks without a model, on the local build
 npm run test:e2e:prod    # the same checks against the published sites
+npm run test:model       # the assistants with a local model, on the published sites
 npm run audit:a11y       # axe-core, WCAG 2.1 AA, desktop and phone widths
 npm run audit:a11y:prod  # the same audit against the published sites
 npm run publish:prod     # build for GitHub Pages into docs/ and the shops repository
@@ -122,8 +123,12 @@ A URL that ends in a network name is treated as a peer-network reference
 with exactly that name. The exit code is 1 when a check fails.
 
 For a local model, LM Studio works: `lms server start --port 1234 --cors`, load
-`qwen/qwen3-30b-a3b-2507`, then use router `http://127.0.0.1:1234/v1` with any
-key.
+`qwen/qwen3-30b-a3b-2507` with a 16K context
+(`lms load qwen/qwen3-30b-a3b-2507 --context-length 16384`), then use router
+`http://127.0.0.1:1234/v1` with any key. On the published sites, Chrome and Edge
+ask whether the page may access apps and services on this device: allow it.
+`npm run test:model` runs the assistants through the whole case this way and
+checks that a test key never leaves for any host but the model router.
 
 ## Notes for small models
 
@@ -135,10 +140,14 @@ return already carries its claim to the desk. With these, a non-reasoning
 
 ## Limits
 
-- Steps are hashed, not signed. A case file shows that nothing changed after a
-  step was recorded, but not who recorded it.
-- Facts are recorded as stated. When the shop disputes one, the case goes to a
-  person.
+- Steps are hash-chained, not signed. The chain shows a careless edit, but
+  whoever holds the file can rewrite it and recompute the hashes, and nothing
+  shows who recorded a step. Outcomes do not rest on the chain, because each
+  party recomputes them. The shop's confirmation does, so the desk cannot prove
+  that a shop confirmed.
+- Facts are recorded as stated. When the shop disputes one, the case is marked
+  for review by a person. The demo records the request, and no reviewer is on
+  duty.
 - The decision function runs as a site action on the desk and as a pinned
   module on the shop. The runtime's coded-tool sandbox needs a response header
   that GitHub Pages cannot set.

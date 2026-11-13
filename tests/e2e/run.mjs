@@ -73,6 +73,28 @@ await check("sample case settles across two origins", async () => {
   await page.close();
 });
 
+await check("the sample case gives the fingerprint shown on the front page, on any day", async () => {
+  const page = watch(await context.newPage());
+  await page.goto(`${DESK}/`);
+  const shown = await page.getAttribute(".copy.customer [data-fp]", "data-fp");
+  // Run the sample as if it were judging week: its filing date is fixed, so the outcome is too.
+  await page.addInitScript(() => {
+    const fixed = new Date("2027-01-15T12:00:00Z").getTime();
+    const RealDate = Date;
+    globalThis.Date = class extends RealDate {
+      constructor(...a) { super(...(a.length ? a : [fixed])); }
+      static now() { return fixed; }
+    };
+  });
+  await page.goto(`${DESK}/case.html#sample=brackenlight-BL-2207`);
+  await page.click('[data-action="check-terms"]');
+  await page.click('dialog.page-dialog button[value="allow"]');
+  await page.waitForSelector(".verdict");
+  assert.match(await page.textContent(".verdict"), /Eligible.*\$79\.00/);
+  assert.equal(await page.getAttribute("#outcome-body .hash", "title"), shown);
+  await page.close();
+});
+
 await check("the verify page recomputes a settled case", async () => {
   const page = watch(await context.newPage());
   await page.goto(`${DESK}/case.html#sample=coppice-CC-5531`);
@@ -143,7 +165,7 @@ await check("an edited case file is refused at the shop", async () => {
   await page.goto(edited);
   await page.waitForSelector("#bo-case .checks");
   const failed = await page.$$eval("#bo-case .checks li[data-passed='no'] .check-label", (els) => els.map((e) => e.textContent));
-  assert.ok(failed.includes("No step in the case file was changed or removed"));
+  assert.ok(failed.includes("Each step in the case file links to the one before"));
   assert.equal(await page.$("#bo-case .bo-actions .btn.primary"), null);
   await page.close();
 });
@@ -187,6 +209,25 @@ await check("the agent runtime boots each published network without a key", asyn
     assert.ok(await page.$("#ns-input"), `no chat input on ${url}`);
     await page.close();
   }
+});
+
+await check("browsers with WebMCP get the desk's and the shop's operations as tools", async () => {
+  const page = watch(await context.newPage());
+  await page.addInitScript(() => {
+    window.__tools = [];
+    document.modelContext = { registerTool: async (tool) => { window.__tools.push(tool); } };
+  });
+  await page.goto(`${DESK}/case.html#sample=brackenlight-BL-2207`);
+  await page.waitForFunction(() => window.__tools.length >= 5, null, { timeout: 15000 });
+  assert.deepEqual(await page.evaluate(() => window.__tools.map((t) => t.name)), ["ord_get_case", "ord_check_terms", "ord_file_claim", "ord_accept_option", "ord_request_review"]);
+  const state = JSON.parse(await page.evaluate(() => window.__tools.find((t) => t.name === "ord_get_case").execute({})));
+  assert.equal(state.order?.id, "BL-2207");
+  await page.goto(`${BRACKENLIGHT}/`);
+  await page.waitForFunction(() => window.__tools.length >= 4, null, { timeout: 15000 });
+  assert.deepEqual(await page.evaluate(() => window.__tools.map((t) => t.name)), ["shop_get_info", "shop_look_up_order", "shop_start_return", "shop_prepare_desk_handoff"]);
+  const order = JSON.parse(await page.evaluate(() => window.__tools.find((t) => t.name === "shop_look_up_order").execute({ order_id: "BL-2207", email: "mina.park@example.com" })));
+  assert.equal(order.ok, true);
+  await page.close();
 });
 
 await check("on a short laptop screen nothing covers the chat input", async () => {

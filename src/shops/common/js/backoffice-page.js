@@ -77,7 +77,7 @@ export class BackOffice {
     const checks = [];
     const add = (label, ok, detail) => checks.push({ label, ok, detail });
     const chain = await verifyChain(caseFile);
-    add("No step in the case file was changed or removed", chain.ok, chain.ok ? `${caseFile.events.length} steps, each linked to the one before.` : chain.problems.join(" "));
+    add("Each step in the case file links to the one before", chain.ok, chain.ok ? `${caseFile.events.length} steps. This shows edits made without recomputing the hashes. It is not a signature.` : chain.problems.join(" "));
     const receipt = caseFile.receipt;
     const ours = receipt?.merchant?.id === SHOP.id;
     add(`The case is about a ${SHOP.name} order`, ours, ours ? `Order ${receipt.order_id}.` : `It names ${receipt?.merchant?.name || "another shop"}.`);

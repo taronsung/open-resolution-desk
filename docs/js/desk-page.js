@@ -112,6 +112,7 @@ export class DeskPage {
       story: "",
       shopDecision: "",
       handoffClaim: null,
+      claimDate: null,
       receipt: null,
       shop: null,
       claim: null,
@@ -188,10 +189,14 @@ export class DeskPage {
       source,
       story: String(handoff.story || "").slice(0, 600),
       shopDecision: String(handoff.shop_decision || "").slice(0, 400),
+      // A sample from this site's own samples/ folder keeps its fixed filing date, so it
+      // gives the same outcome and fingerprint on any day. Other cases are filed today.
+      claimDate: source === "sample" && /^\d{4}-\d{2}-\d{2}$/.test(String(handoff.claim?.reported_on || "")) ? handoff.claim.reported_on : null,
       handoffClaim: handoff.claim && typeof handoff.claim === "object" ? normalizeClaim({ ...handoff.claim, reported_on: today() }) : null,
       receipt: handoff.receipt,
       shop: { site: String(handoff.receipt.merchant?.site || ""), name: String(handoff.receipt.merchant?.name || "the shop"), verified: null },
     });
+    if (this.state.claimDate && this.state.handoffClaim) this.state.handoffClaim.reported_on = this.state.claimDate;
     this.changed();
     return { ok: true, case: this.getCase() };
   }
@@ -352,7 +357,7 @@ export class DeskPage {
     for (const key of FACTS_BY_TYPE[type]) {
       if (input?.[key] === true || input?.[key] === false) facts[key] = input[key];
     }
-    const claim = normalizeClaim({ type, sku, quantity, reported_on: today(), facts });
+    const claim = normalizeClaim({ type, sku, quantity, reported_on: this.state.claimDate || today(), facts });
     const result = await computeOutcome({ terms: shop.terms, receipt, claim, engineSha256: this.engineSha256 });
     const at = new Date().toISOString();
     if (!this.state.caseFile) {
@@ -764,7 +769,7 @@ export class DeskPage {
       el("dt", { text: "Terms on the receipt" }), el("dd", {}, `Version ${receipt.terms?.version} `, el("code", { class: "hash", title: receipt.terms?.sha256, text: shortHash(receipt.terms?.sha256) })),
     );
     box.append(lines);
-    if (source === "sample") box.append(el("p", { class: "note", text: `This is a sample case. Its receipt comes from the fictional ${receipt.merchant?.name || "shop"}.` }));
+    if (source === "sample") box.append(el("p", { class: "note", text: `This is a sample case. Its receipt comes from the fictional ${receipt.merchant?.name || "shop"}${this.state.claimDate ? `, and it is filed as of ${longDate(this.state.claimDate)}, so it gives the same outcome on any day` : ""}.` }));
     if (story) box.append(el("blockquote", { class: "story" }, el("p", { text: story }), el("footer", { text: "The customer's account, from the shop's handoff" })));
     if (shopDecision) box.append(el("p", { class: "shop-decision" }, el("strong", { text: "What the shop decided: " }), shopDecision));
     const status = el("div", { class: "terms-status", role: "status" });
@@ -943,7 +948,7 @@ export class DeskPage {
         el("p", { text: ok
           ? `${shop?.name || "The shop"} recomputed the outcome on its own site and confirmed: ${accepted?.label || "the choice"}, ${money(accepted?.value_cents || 0)}.`
           : `${shop?.name || "The shop"} declined and asked for review by a person.` }),
-        el("p", { class: "small", text: response?.chain?.ok ? "Every step in the case file checks out: nothing was changed after it was recorded." : `The case file has problems: ${(response?.chain?.problems || []).join(" ")}` })));
+        el("p", { class: "small", text: response?.chain?.ok ? "Every step in the case file links to the one before it. In this demo the shop's confirmation is not signed." : `The case file has problems: ${(response?.chain?.problems || []).join(" ")}` })));
       box.append(this.recordButtons());
       return;
     }

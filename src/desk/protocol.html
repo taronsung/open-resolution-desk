@@ -69,7 +69,7 @@
     <p>Language models never set the outcome or its amounts. They help a person describe what happened, explain the result, and talk to the other side's agent. Shop offers are published data, so the desk computes their value too.</p>
 
     <h2 id="case">Case files and links</h2>
-    <p>A case file (<code>ord-case/1</code>) holds the receipt and a list of events: <code>filed</code>, <code>outcome</code>, <code>accepted</code>, <code>confirmed</code>, <code>declined</code> and <code>review_requested</code>. Each event's hash covers the one before it, so a changed or removed step is visible on the <a href="./verify.html">verify page</a>.</p>
+    <p>A case file (<code>ord-case/1</code>) holds the receipt and a list of events: <code>filed</code>, <code>outcome</code>, <code>accepted</code>, <code>confirmed</code>, <code>declined</code> and <code>review_requested</code>. Each event's hash covers the one before it, so a step that was changed or removed without recomputing the hashes after it shows on the <a href="./verify.html">verify page</a>. Events are not signed: whoever holds the file can rewrite it from any step and recompute the hashes. Outcomes do not rest on the chain, because each party recomputes them from the terms, the receipt and the claim.</p>
     <p>Cases travel as links. The shop's handoff link (<code>case.html#handoff=…</code>) and the case links between the parties (<code>#case=…</code>) carry the compressed JSON in the URL fragment, which browsers do not send to web servers. The desk's host receives nothing.</p>
 
     <h2 id="spec">How this site uses the open agentic web specification</h2>
@@ -97,8 +97,8 @@
 
     <h2 id="limits">Limits of this demo</h2>
     <ul>
-      <li>Steps are hashed, not signed. A case file shows that nothing changed after a step was recorded, but not who recorded it. A production version would sign events with keys each party publishes in its manifest.</li>
-      <li>Facts are recorded as stated. When the shop disputes one, the case goes to a person.</li>
+      <li>Steps are hash-chained, not signed. The chain shows a careless edit, but whoever holds the file can rewrite it and recompute the hashes, and nothing shows who recorded a step. The desk therefore cannot prove that a shop confirmed a case. A production version would sign events with keys each party publishes in its manifest.</li>
+      <li>Facts are recorded as stated. When the shop disputes one, the case is marked for review by a person. The demo records the request, and no reviewer is on duty.</li>
       <li>The decision function runs as a site action on the desk and as a pinned module on the shop. The runtime's coded-tool sandbox needs a response header that static hosts such as GitHub Pages cannot set.</li>
       <li>Everything is tab-scoped. There are no accounts, notifications or reminders: links are the transport.</li>
     </ul>

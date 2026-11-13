@@ -41,7 +41,7 @@ async function show(caseFile) {
   const filed = [...caseFile.events].reverse().find((e) => e.type === "filed");
   const confirmed = latest(caseFile, "confirmed");
   const checks = el("ol", { class: "checks" },
-    checkItem(chain.ok, "No step was changed, removed or reordered", chain.ok ? `${caseFile.events.length} steps, each linked to the one before.` : chain.problems.join(" ")),
+    checkItem(chain.ok, "Each step links to the one before", chain.ok ? `${caseFile.events.length} steps. This shows edits made without recomputing the hashes. It is not a signature.` : chain.problems.join(" ")),
     checkItem(outcomeEvent?.data?.engine?.sha256 === engineSha256, "The outcome used the decision function this desk publishes", `${shortHash(outcomeEvent?.data?.engine?.sha256)} in the case, ${shortHash(engineSha256)} here.`));
   const timeline = el("ol", { class: "checks" }, caseFile.events.map((e) => el("li", { "data-passed": "yes" },
     el("span", { class: "mark", "aria-hidden": "true", text: String(e.seq) }),
@@ -83,7 +83,7 @@ async function recomputeOutcome(caseFile, outcomeEvent, filed, confirmed) {
       el("ol", { class: "checks" },
         checkItem(termsSha === receipt.terms.sha256 && termsSha === entry.sha256, `Terms version ${receipt.terms.version} match the receipt and the shop's archive`, shortHash(termsSha)),
         checkItem(same, "Recomputed fingerprint equals the recorded one", `${shortHash(result.fingerprint)}`),
-        confirmed ? checkItem(sameConfirmed, "The shop confirmed the same fingerprint", `${confirmed.data.ledger_ref || ""}`) : checkItem(null, "The shop has not confirmed yet", "")),
+        confirmed ? checkItem(sameConfirmed, "The shop confirmed the same fingerprint", `${confirmed.data.ledger_ref ? `${confirmed.data.ledger_ref}. ` : ""}The confirmation is not signed in this demo.`) : checkItem(null, "The shop has not confirmed yet", "")),
       el("figure", { class: "fingerprint" }, fingerprintMark(result.fingerprint, { size: 132, matched: same && sameConfirmed }),
         el("figcaption", {}, el("span", { class: "fp-title", text: same ? "Matches the case file" : "Does not match" }), el("code", { class: "hash", text: shortHash(result.fingerprint) }))));
   } catch (error) {

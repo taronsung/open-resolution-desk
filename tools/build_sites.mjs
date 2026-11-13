@@ -263,17 +263,19 @@ await write(path.join(deskOut, "agents/agent-manifest.json"), `${JSON.stringify(
 buildNetwork(path.join(deskOut, "desk_clerk.hocon"), path.join(deskOut, "agent-manifest.json"), path.join(deskOut, "runtime"));
 buildNetwork(path.join(deskOut, "agents/desk_preview.hocon"), path.join(deskOut, "agents/agent-manifest.json"), path.join(deskOut, "runtime"));
 
-// Sample handoffs: the same packages a shop's handoff link carries.
+// Sample handoffs: the same packages a shop's handoff link carries. They are filed
+// as of a fixed date, so a sample gives the same outcome and fingerprint on any day.
+const SAMPLE_DATE = "2026-11-13";
 const samples = [
   { shop: "brackenlight", order: "BL-2207", claim: { type: "change_of_mind", sku: "lamp-ash-glaze", facts: { unused: true, original_packaging: true } }, story: "I bought the Ash Glaze lamp in early October, before the terms changed. The shade colour does not suit my room. It is unused and still in its box. The shop's assistant says I am past the 30-day window.", decision: "Not eligible: \"Reported within 30 days of delivery\" is not met, clause 2.1 (our returns terms, version 3)" },
   { shop: "coppice", order: "CC-5531", claim: { type: "change_of_mind", sku: "wheelset-custom", facts: { unused: true, original_packaging: true } }, story: "I ordered a custom wheelset and changed my mind before riding it. It is unused and in the box. I would like a refund.", decision: "Not eligible: \"The item is not excluded (made-to-order items)\" is not met, clause 4.1 (our returns terms, version 1)" },
 ];
 for (const s of samples) {
   const receipt = shopData[s.shop].data.orders.find((o) => o.order_id === s.order);
-  await write(path.join(deskOut, `samples/${s.shop}-${s.order}.json`), `${JSON.stringify({ protocol: "ord-handoff/1", receipt, story: s.story, shop_decision: s.decision, claim: s.claim }, null, 2)}\n`);
+  await write(path.join(deskOut, `samples/${s.shop}-${s.order}.json`), `${JSON.stringify({ protocol: "ord-handoff/1", receipt, story: s.story, shop_decision: s.decision, claim: { ...s.claim, reported_on: SAMPLE_DATE } }, null, 2)}\n`);
 }
 // The landing page shows the sample case's fingerprint, filed on a fixed date.
-const sampleDate = "2026-11-13";
+const sampleDate = SAMPLE_DATE;
 const bl = shopData.brackenlight;
 const sampleReceipt = bl.data.orders.find((o) => o.order_id === "BL-2207");
 const { computeOutcome } = await import("../protocol/v1/case.js");
